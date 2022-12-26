@@ -13,6 +13,10 @@ class TestEncode(unittest.TestCase):
         self.assertEqual(encodeUINT16(65537), False)
         self.assertEqual(encodeUINT16(65535), bytearray(b"\xFF\xFF"))
         self.assertEqual(encodeUINT16(48002), bytearray(b"\x82\xBB"))
+    def test_CRC(self):
+        self.assertEqual(payloadCRC(200, b'\xdc\x05\xdc\x05\xdc\x05\xdc\x05\xdc\x05\xdc\x05\xdc\x05\xdc\x05'), b'\xd8')
+        self.assertEqual(payloadCRC(200, b'\xdc\x05\xdc\x05\xdc\x05\xdc\x05\xdc\x05\x7c\x05\xdc\x05\xdc\x05'), b'\x78')
+        
 
 if __name__=='__main__':
 	unittest.main()
