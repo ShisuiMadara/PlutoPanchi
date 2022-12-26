@@ -10,7 +10,7 @@ def encodeUINT16(num: int):
     else:
         return num.to_bytes(2, 'little')
 
-def payloadCRC(type_: int, payload: bytes) -> bytes:
+def packetCRC(type_: int, payload: bytes) -> bytes:
     checksum = b'\x00'
     checksum = (checksum[0] ^ len(payload).to_bytes(1, 'little')[0]).to_bytes(1, 'little')
     checksum = (checksum[0] ^ type_.to_bytes(1, 'little')[0]).to_bytes(1, 'little')
