@@ -25,6 +25,11 @@ class req ():
 		for i in range data.length():
 			string += data
 
+			if(i == data.length - 1):
+				continue
+
+			string += ","
+
         try:
             publisher.send(string.encode('utf-8'))
         except zmq.ZMQError as e:
