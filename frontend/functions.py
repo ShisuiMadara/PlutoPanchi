@@ -88,6 +88,52 @@ class req ():
 
 		#publish
 
+	def back_flip (self):
+
+		self.command_type = 3
+
+		#publish
+
+	def front_flip (self):
+
+		self.command_type = 4
+
+		#publish
+
+	def right_flip (self):
+
+		self.command_type = 5
+
+		#publish
+
+	def left_flip (self):
+
+		self.command_type = 6
+
+		#publish
+
+	def set_roll (self, rol):
+
+		self.roll = rol
+		#publish
+
+	def set_pitch (self, pit):
+
+		self.pitch = pit
+
+		#publish
+
+	def set_yaw (self, ya):
+
+		self.yaw = ya
+		#publish
+
+	def set_throttle (self, throt):
+
+		self.throttle = throt
+
+		#publish
+		
 	def reset (self):
 
 		self.roll = 1500
