@@ -3,6 +3,13 @@ class req ():
 
 	def __init__ (self, roll, pitch, yaw, throttle, head_free, dev_mode, alt_hold, is_armed, command_type):
 
+
+		ctx = zmq.Context.instance()
+
+	    publisher = ctx.socket(zmq.PUB)
+	    publisher.bind("tcp://*:6000")
+
+
 		self.roll = 1500
 		self.pitch = 1500
 		self.yaw = 1500
@@ -11,129 +18,168 @@ class req ():
 		self.dev_mode = True
 		self.alt_hold = True
 		self.is_armed = False
-		
+
+	def publish (self, data): 
+		string = ""
+
+		for i in range data.length():
+			string += data
+
+        try:
+            publisher.send(string.encode('utf-8'))
+        except zmq.ZMQError as e:
+            if e.errno == zmq.ETERM:
+                break          
+            else:
+                raise
+        time.sleep(0.1)        
+	        
 
 	def arm (self):
 
 		#do arming 
 		self.is_armed = True
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+
+		self.publish(arr)
+
 
 	def disarm (self):
 
 		#do disarming
 		self.is_armed = False
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def forward (self):
 
 		self.pitch += 200
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+
+		self.publish(arr)
 
 	def backward (self):
 
 		self.pitch -= 200
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+
+		self.publish(arr)
 
 	def left (self):
 
 		self.roll -= 200
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def right (self):
 
 		self.roll += 200
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def left_yaw (self):
 
 		self.yaw -= 200
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def right_yaw (self):
 
 		self.yaw += 200
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def increase_height (self):
 
 		self.throttle += 100
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def decrease_height (self):
 
 		self.throttle -= 100
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def take_off (self):
 
 		self.arm()
 		self.command_type = 1
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def land (self):
 
 		self.command_type = 2
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def back_flip (self):
 
 		self.command_type = 3
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def front_flip (self):
 
 		self.command_type = 4
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def right_flip (self):
 
 		self.command_type = 5
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def left_flip (self):
 
 		self.command_type = 6
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def set_roll (self, rol):
 
 		self.roll = rol
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def set_pitch (self, pit):
 
 		self.pitch = pit
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)#publish
 
 	def set_yaw (self, ya):
 
 		self.yaw = ya
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 	def set_throttle (self, throt):
 
 		self.throttle = throt
 
-		#publish
-		
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
+
 	def reset (self):
 
 		self.roll = 1500
@@ -141,7 +187,8 @@ class req ():
 		self.pitch = 1500
 		self.throttle = 1500
 
-		#publish
+		arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+		self.publish(arr)
 
 if __name__ == '__main__':
 	test = req()
