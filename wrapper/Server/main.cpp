@@ -103,7 +103,7 @@ public:
         command_buffer[4] = (uint8_t) 217;
         command_buffer[5] = (uint8_t) 0;
 
-        calcCRC(command_buffer) 
+        calcCRC(command_buffer); 
     }
 
 };
@@ -133,9 +133,9 @@ void* getRCRequests(void* comm){
     }
 }
 
-void* get_command_req (void* com) {
+void* get_command_req (void* comm) {
 
-    Communication* comm = (Communication*) com;
+    Communication* com = (Communication*) comm;
 
     while(true) {
 
@@ -159,6 +159,7 @@ int main(){
         }
     }
     comm->initRCBuffer();
+    comm->init_command_buffer();
 
     if (pthread_mutex_init(&socketLock, NULL) != 0){
         cout << "Mutex failure!" << endl;
@@ -171,6 +172,9 @@ int main(){
 
     pthread_t RC, Comm;
     int RC_ = pthread_create(&RC, NULL, sendRCRequests, (void*) comm);
+    int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
+
     pthread_join(RC, NULL);
+    pthread_join(Comm, NULL);
     sleep(5);
 }
