@@ -59,6 +59,23 @@ public:
             if (errno == EINPROGRESS) cout << "bb";
             return false;
         }
+        int optval = 1;
+        int optlen = sizeof(optval);
+
+        if(setsockopt(SockID, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen) < 0) {
+            return false;
+        }
+
+        int error = 0 ;
+        socklen_t len = sizeof(error);
+
+
+        int retval = getsockopt(SockID, SOL_SOCKET, SO_ERROR, &error, &len);
+
+        if(error != 0) {
+            return false;
+        }
+
         cout << "Pluto Connected" << endl;
         return true;
     }
