@@ -148,6 +148,19 @@ void* sendRCRequests(void* comm){
     }    
 }
 
+void* getRCRequests(void* comm){
+    Communication* com = (Communication*) comm;
+    while (true){
+        //Suscriber Begin
+        
+        //Subscriber End
+        pthread_mutex_lock(&RCbufLock);
+        //Edit to add RCBuffer Modification
+        
+        pthread_mutex_unlock(&RCbufLock);
+    }
+}
+
 int main(){
     Communication* comm = new Communication;
     if(comm->connectSocket() != true){
