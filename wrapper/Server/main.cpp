@@ -49,16 +49,6 @@ public:
         sockaddr.sin_addr.s_addr = inet_addr(IP_ADDR);
         long arg;
         
-        // if ((arg = fcntl(SockID, F_GETFL, NULL)) < 0){
-        //     cout << "Connection Failure!" << endl;
-        //     return false;
-        // }
-        // arg |= O_NONBLOCK;
-        // if (fcntl(SockID, F_SETFL, arg) < 0){
-        //     cout << "Connection Failure!" << endl;
-        //     return false;
-        // }
-
         int res = connect(SockID, (struct sockaddr *) &sockaddr, sizeof(sockaddr));
         if (res < 0){
             cout << "Connection Faillure!" << endl;
@@ -77,40 +67,6 @@ public:
 
         int optval;
         socklen_t optlen;
-        // if(getsockopt(SockID, SOL_SOCKET, SO_KEEPALIVE, &optval, &optlen) < 0){
-        //     cout << "Connection Failure!" << endl;
-        //     close(SockID);
-        //     return false;
-        // }
-        // optval = 1;
-        // optlen = sizeof(optval);
-        // if (setsockopt(SockID, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen) < 0){
-        //     cout << "Connection Failure!" << endl;
-        //     close(SockID);
-        //     return false;
-        // }
-        // if(getsockopt(SockID, SOL_SOCKET, SO_KEEPALIVE, &optval, &optlen) < 0){
-        //     cout << "Connection Failure!" << endl;
-        //     close(SockID);
-        //     return false;
-        // }
-        // int error = 0;
-        // socklen_t len = sizeof(error);
-        // int retval = getsockopt(SockID, SOL_SOCKET, SO_ERROR, &error, &len);
-
-        // if (retval != 0){
-        //     cout << "Connection Failure!" << endl;
-        //     close(SockID);
-        //     return false;
-        // }
-        // if (error != 0){
-        //     cout << "Connection Failure!" << endl;
-        //     close(SockID);
-        //     return false;
-        // }
-        // else {
-        //     cout << "Pluto Connected" << endl;
-        // }
         cout << "Pluto Connected" << endl;
         return true;
     }
