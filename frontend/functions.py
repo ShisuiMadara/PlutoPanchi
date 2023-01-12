@@ -48,7 +48,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
-        self.publish(arr)
+        publish(arr)
 
     def disarm(self):
 
@@ -57,7 +57,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        
+        publish(arr)
 
     def forward(self):
 
@@ -66,7 +67,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
-        self.publish(arr)
+        publish(arr)
 
     def backward(self):
 
@@ -75,7 +76,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
-        self.publish(arr)
+        publish(arr)
 
     def left(self):
 
@@ -83,7 +84,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def right(self):
 
@@ -91,7 +92,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def left_yaw(self):
 
@@ -99,7 +100,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def right_yaw(self):
 
@@ -107,7 +108,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def increase_height(self):
 
@@ -115,7 +116,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def decrease_height(self):
 
@@ -123,7 +124,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def take_off(self):
 
@@ -132,7 +133,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def land(self):
 
@@ -140,7 +141,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def back_flip(self):
 
@@ -148,7 +149,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def front_flip(self):
 
@@ -156,7 +157,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def right_flip(self):
 
@@ -164,7 +165,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def left_flip(self):
 
@@ -172,14 +173,14 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def set_roll(self, rol):
 
         self.roll = rol
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def set_pitch(self, pit):
 
@@ -187,14 +188,14 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)  # publish
+        publish(arr)  # publish
 
     def set_yaw(self, ya):
 
         self.yaw = ya
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def set_throttle(self, throt):
 
@@ -202,7 +203,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def reset(self):
 
@@ -213,8 +214,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
 
 if __name__ == '__main__':
-    test = req()
+    test = req(1500,1500,1500,1500,True,True,True,False,0)
