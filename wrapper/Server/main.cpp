@@ -17,6 +17,7 @@ using namespace std;
 int PORT = 6000;
 char* IP_ADDR = "127.0.0.1";
 int SockID;
+pthread_mutex_t socketLock, RCbufLock;
 
 class Communication{
 public:
@@ -137,7 +138,14 @@ public:
 
 void* sendRCRequests(void* comm){
     Communication* com = (Communication*) comm;
-    write(SockID, &com->RCBuffer[0], com->RCBuffer.size());
+    while(true){
+        pthread_mutex_lock(&RCbufLock);
+        pthread_mutex_lock(&socketLock);
+        write(SockID, &com->RCBuffer[0], com->RCBuffer.size());
+        usleep(5);
+        pthread_mutex_unlock(&socketLock);
+        pthread_mutex_unlock(&RCbufLock);
+    }    
 }
 
 int main(){
@@ -150,6 +158,16 @@ int main(){
         }
     }
     comm->initRCBuffer();
+
+    if (pthread_mutex_init(&socketLock, NULL) != 0){
+        cout << "Mutex failure!" << endl;
+        exit(1);
+    }
+    if (pthread_mutex_init(&RCbufLock, NULL) != 0){
+        cout << "Mutex failure!" << endl;
+        exit(1);
+    }
+
     pthread_t RC, Comm;
     int RC_ = pthread_create(&RC, NULL, sendRCRequests, (void*) comm);
     pthread_join(RC, NULL);
