@@ -1,16 +1,35 @@
 import zmq
 from zmq.devices import monitored_queue
 
-from zhelpers import zpipe
+ctx = zmq.Context.instance()
+publisher = ctx.socket(zmq.PUB)
+publisher.bind("tcp://*:6000")
+
+
+def publish(data):
+    stri = ""
+
+    for i in range(0, data.length()):
+        stri += data
+
+        if(i == data.length - 1):
+            continue
+
+        stri += ","
+
+        try:
+            publisher.send(stri.encode('utf-8'))
+        except zmq.ZMQError as e:
+            if e.errno == zmq.ETERM:
+                throw(e.errno)
+            else:
+                raise
+        time.sleep(0.1)
 
 
 class req ():
 
     def __init__(self, roll, pitch, yaw, throttle, head_free, dev_mode, alt_hold, is_armed, command_type):
-
-        ctx = zmq.Context.instance()
-        publisher = ctx.socket(zmq.PUB)
-        publisher.bind("tcp://*:6000")
 
         self.roll = 1500
         self.pitch = 1500
@@ -20,26 +39,6 @@ class req ():
         self.dev_mode = True
         self.alt_hold = True
         self.is_armed = False
-
-    def publish(self, data):
-        string = ""
-
-        for i in range(0, data.length()):
-            string += data
-
-            if(i == data.length - 1):
-                continue
-
-            string += ","
-
-    try:
-        publisher.send(string.encode('utf-8'))
-    except zmq.ZMQError as e:
-        if e.errno == zmq.ETERM:
-            throw(e.errno)
-        else:
-            raise
-    time.sleep(0.1)
 
     def arm(self):
 
