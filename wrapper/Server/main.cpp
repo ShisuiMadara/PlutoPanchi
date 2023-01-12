@@ -14,8 +14,8 @@
 
 using namespace std;
 
-int PORT = 6000;
-char* IP_ADDR = "127.0.0.1";
+int PORT = 23;
+char* IP_ADDR = "192.168.4.1";
 int SockID;
 pthread_mutex_t socketLock, RCbufLock;
 
@@ -172,7 +172,7 @@ int main(){
 
     pthread_t RC, Comm;
     int RC_ = pthread_create(&RC, NULL, sendRCRequests, (void*) comm);
-    int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
+    //int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
 
     pthread_join(RC, NULL);
     pthread_join(Comm, NULL);
