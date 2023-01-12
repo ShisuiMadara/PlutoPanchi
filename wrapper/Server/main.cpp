@@ -114,7 +114,7 @@ void* sendRCRequests(void* comm){
         pthread_mutex_lock(&RCbufLock);
         pthread_mutex_lock(&socketLock);
         write(SockID, &com->RCBuffer[0], com->RCBuffer.size());
-        usleep(5);
+        sleep(10);
         pthread_mutex_unlock(&socketLock);
         pthread_mutex_unlock(&RCbufLock);
     }    
