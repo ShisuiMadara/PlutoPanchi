@@ -59,18 +59,6 @@ public:
             if (errno == EINPROGRESS) cout << "bb";
             return false;
         }
-        if ((arg = fcntl(SockID, F_GETFL, NULL)) < 0){
-            cout << "Connection Failure!" << endl;
-            return false;
-        }
-        arg &= (~O_NONBLOCK);
-        if (fcntl(SockID, F_SETFL, arg) < 0){
-            cout << "Connection Failure!" << endl;
-            return false;
-        }
-
-        int optval;
-        socklen_t optlen;
         cout << "Pluto Connected" << endl;
         return true;
     }
@@ -113,8 +101,8 @@ void* sendRCRequests(void* comm){
     while(true){
         pthread_mutex_lock(&RCbufLock);
         pthread_mutex_lock(&socketLock);
-        write(SockID, &com->RCBuffer[0], com->RCBuffer.size());
-        sleep(10);
+        send(SockID, &com->RCBuffer[0], com->RCBuffer.size(), 0);
+        usleep(500);
         pthread_mutex_unlock(&socketLock);
         pthread_mutex_unlock(&RCbufLock);
     }    
@@ -171,6 +159,9 @@ int main(){
     }
 
     pthread_t RC, Comm;
+
+    sleep(1);
+
     int RC_ = pthread_create(&RC, NULL, sendRCRequests, (void*) comm);
     //int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
 
