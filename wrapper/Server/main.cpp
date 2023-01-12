@@ -22,8 +22,12 @@ pthread_mutex_t socketLock, RCbufLock;
 class Communication{
 public:
     vector<uint8_t> RCBuffer;
+    vector<uint8_t> command_buffer;
+
+
     Communication(){
         RCBuffer = vector<uint8_t>(22);
+        command_buffer = vector<uint8_t>(7);
     }
     void calcCRC(vector<uint8_t>& buf){
         uint8_t crc = 0;
@@ -90,6 +94,18 @@ public:
         }
         calcCRC(RCBuffer);
     }
+
+    void init_command_buffer () {
+        command_buffer[0] = '$';
+        command_buffer[1] = 'M';
+        command_buffer[2] = '<';
+        command_buffer[3] = (uint8_t) 1;
+        command_buffer[4] = (uint8_t) 217;
+        command_buffer[5] = (uint8_t) 0;
+
+        calcCRC(command_buffer) 
+    }
+
 };
 
 void* sendRCRequests(void* comm){
@@ -116,6 +132,22 @@ void* getRCRequests(void* comm){
         pthread_mutex_unlock(&RCbufLock);
     }
 }
+
+void* get_command_req (void* com) {
+
+    Communication* comm = (Communication*) com;
+
+    while(true) {
+
+        //call subscriber
+
+        pthread_mutex_lock(&socketLock);
+        write(SockID, &com->command_buffer[0], com->command_buffer.size());
+        pthread_mutex_unlock(&socketLock);
+          
+    }
+ }
+
 
 int main(){
     Communication* comm = new Communication;
