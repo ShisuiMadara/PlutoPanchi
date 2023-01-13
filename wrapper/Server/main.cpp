@@ -14,10 +14,10 @@
 
 using namespace std;
 
-//int PORT = 23;
-//char* IP_ADDR = "192.168.4.1";
-int PORT = 6000;
-char* IP_ADDR = "127.0.0.1";
+int PORT = 23;
+char* IP_ADDR = "192.168.4.1";
+// int PORT = 12000;
+// char* IP_ADDR = "127.0.0.1";
 
 int SockID;
 pthread_mutex_t socketLock, RCbufLock;
@@ -100,6 +100,7 @@ public:
         for (int i = 4; i < 8; i++){
             addRCBuffer(1500, i);
         }
+        addRCBuffer(1600, 2);
         calcCRC(RCBuffer);
     }
 
@@ -122,10 +123,7 @@ void* sendRCRequests(void* comm){
     Communication* com = (Communication*) comm;
     int i = 0;
     while(true){
-        if (i == 50){            
-            com->addRCBuffer(2055, 2);
-            com->calcCRC(com->RCBuffer);
-        }
+        
         if (i == 55){
             com->command_buffer[5] = (uint8_t)1;
             com->calcCRC(com->command_buffer);
@@ -141,7 +139,7 @@ void* sendRCRequests(void* comm){
         }
         pthread_mutex_lock(&RCbufLock);
         pthread_mutex_lock(&socketLock);
-        usleep(500);
+        usleep(50000);
         int x = send(SockID, &com->RCBuffer[0], com->RCBuffer.size(), 0);
         cout << x << endl;
         pthread_mutex_unlock(&socketLock);
@@ -171,10 +169,11 @@ void get_command_req (void* comm) {
 
         //call subscriber
         cout<<"ll";
+        usleep(500);
         pthread_mutex_lock(&socketLock);
         send(SockID, &com->command_buffer[0], com->command_buffer.size(), 0);
         pthread_mutex_unlock(&socketLock);
-        usleep(500);
+        usleep(50000);
           
     //}
  }
