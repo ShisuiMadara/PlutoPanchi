@@ -9,6 +9,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     conn, addr = s.accept()
     with conn:
         print(f"Connected by {addr}")
+        t = 0
         while True:
             data = conn.recv(1024)
             print(data)
+            t += 1
+            if t == 102:
+                break
