@@ -236,7 +236,7 @@ if __name__ == '__main__':
 
  
     publisher = ctx.socket(zmq.XPUB)
-    publisher.bind("tcp://*:6001")
+    publisher.bind("tcp://127.0.0.1:6000")
 
     p_thread = Thread(target=publish(data))
     p_thread.start()
