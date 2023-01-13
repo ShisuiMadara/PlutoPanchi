@@ -16,6 +16,9 @@ using namespace std;
 
 int PORT = 23;
 char* IP_ADDR = "192.168.4.1";
+//int PORT = 6000;
+//char* IP_ADDR = "127.0.0.1";
+
 int SockID;
 pthread_mutex_t socketLock, RCbufLock;
 
@@ -31,7 +34,7 @@ public:
     }
     void calcCRC(vector<uint8_t>& buf){
         uint8_t crc = 0;
-        for (int i = 4; i < buf.size() - 1; i++){
+        for (int i = 3; i < buf.size() - 1; i++){
             crc ^= buf[i];
         }
         buf[buf.size() - 1] = crc;
@@ -94,7 +97,7 @@ public:
         calcCRC(RCBuffer);
     }
     void readyBuffer(){
-        for (int i = 4; i < 7; i++){
+        for (int i = 4; i < 8; i++){
             addRCBuffer(1500, i);
         }
         calcCRC(RCBuffer);
@@ -118,8 +121,11 @@ void* sendRCRequests(void* comm){
     while(true){
         pthread_mutex_lock(&RCbufLock);
         pthread_mutex_lock(&socketLock);
-        send(SockID, &com->RCBuffer[0], com->RCBuffer.size(), 0);
+        //com->connectSocket();
         usleep(500);
+        int x = send(SockID, &com->RCBuffer[0], com->RCBuffer.size(), 0);
+        cout << x << endl;
+        //close(SockID);
         pthread_mutex_unlock(&socketLock);
         pthread_mutex_unlock(&RCbufLock);
     }    
@@ -165,6 +171,7 @@ int main(){
     }
     comm->initRCBuffer();
     comm->init_command_buffer();
+    comm->readyBuffer();
 
     if (pthread_mutex_init(&socketLock, NULL) != 0){
         cout << "Mutex failure!" << endl;
