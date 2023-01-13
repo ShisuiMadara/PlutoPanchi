@@ -3,11 +3,8 @@ from zmq.devices import monitored_queue
 from threading import Thread
 import time 
 
-
-
-
-
-def publish(data, publisher):
+publisher = None
+def publish(data):
     stri = ""
 
     for i in range(0, len(data)):
@@ -25,6 +22,8 @@ def publish(data, publisher):
                 raise(e.errno)
             else:
                 raise
+    
+        print(stri)
         time.sleep(0.1)
 
 def listener_thread (pipe):
@@ -239,7 +238,7 @@ if __name__ == '__main__':
     publisher = ctx.socket(zmq.XPUB)
     publisher.bind("tcp://*:6001")
 
-    p_thread = Thread(target=publish(data, publisher))
+    p_thread = Thread(target=publish(data))
     p_thread.start()
 
 
