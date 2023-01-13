@@ -1,18 +1,19 @@
 import zmq
 from zmq.devices import monitored_queue
-
-ctx = zmq.Context.instance()
-publisher = ctx.socket(zmq.PUB)
-publisher.bind("tcp://*:6000")
+from threading import Thread
+import time 
 
 
-def publish(data):
+
+
+
+def publish(data, publisher):
     stri = ""
 
-    for i in range(0, data.length()):
+    for i in range(0, len(data)):
         stri += data
 
-        if(i == data.length - 1):
+        if(i == len(data) - 1):
             continue
 
         stri += ","
@@ -21,10 +22,19 @@ def publish(data):
             publisher.send(stri.encode('utf-8'))
         except zmq.ZMQError as e:
             if e.errno == zmq.ETERM:
-                throw(e.errno)
+                raise(e.errno)
             else:
                 raise
         time.sleep(0.1)
+
+def listener_thread (pipe):
+    
+    while True:
+        try:
+            print (pipe.recv_multipart())
+        except zmq.ZMQError as e:
+            if e.errno == zmq.ETERM:
+                break           
 
 
 class req ():
@@ -218,4 +228,22 @@ class req ():
 
 
 if __name__ == '__main__':
+
+    ctx = zmq.Context.instance()
+
     test = req(1500,1500,1500,1500,True,True,True,False,0)
+
+    data = "1500,1500,1500,1500,True,True,True,False,0"
+
+ 
+    publisher = ctx.socket(zmq.XPUB)
+    publisher.bind("tcp://*:6001")
+
+    p_thread = Thread(target=publish(data, publisher))
+    p_thread.start()
+
+
+
+    del  publisher
+    ctx.term()
+   
