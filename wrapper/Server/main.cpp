@@ -11,8 +11,13 @@
 #include <arpa/inet.h>
 #include<fcntl.h>
 #include <vector>
+#include <thread>
+#include <zmq.hpp>
+#include <signal.h>
 
 using namespace std;
+
+static int s_interrupted = 0;
 
 int PORT = 23;
 char* IP_ADDR = "192.168.4.1";
@@ -150,14 +155,63 @@ void* sendRCRequests(void* comm){
 
 void* getRCRequests(void* comm){
     Communication* com = (Communication*) comm;
+
+    //Sub init
+    const string TOPIC = "front";
+    zmq::context_t zmq_context(1);
+    zmq::socket_t zmq_socket(zmq_context, ZMQ_SUB);
+    zmq_socket.connect("tcp://127.0.0.1:6000");
+
+    zmq::socket_t killer_socket(zmq_context, ZMQ_PAIR); 
+    killer_socket.bind("ipc://killmebaby");
+
+    zmq_socket.setsockopt(ZMQ_SUBSCRIBE, TOPIC.c_str(), TOPIC.length()); 
+    zmq::pollitem_t items [] = {
+        { zmq_socket, 0, ZMQ_POLLIN, 0 },
+        { killer_socket, 0, ZMQ_POLLIN, 0 }
+    };
     while (true){
         //Suscriber Begin
-        
+        int rc = 0;
+        zmq::message_t topic;
+        zmq::message_t msg;
+        zmq::poll (&items [0], 2, -1);
+        cout << "AA" << endl;
+        if (items [0].revents & ZMQ_POLLIN)
+        {
+            cout << "waiting on recv..." << endl;
+            rc = zmq_socket.recv(&topic, ZMQ_RCVMORE);  
+            rc = zmq_socket.recv(&msg) && rc;
+            if(rc > 0) 
+            {
+                cout << "topic:\"" << string(static_cast<char*>(topic.data()), topic.size()) << "\"" << endl;
+                string dat = string(static_cast<char*>(msg.data()), msg.size());
+                stringstream ss(dat);
+                pthread_mutex_lock(&RCbufLock);
+                int temp;
+                for (int i = 0; i < 4; i++){                    
+                    ss >> temp;
+                    com->addRCBuffer(temp, i);
+                }
+                for (int i = 4; i < 8; i++){                    
+                    ss >> temp;
+                    if (temp) temp = 1500;
+                    else temp = 1100;
+                    com->addRCBuffer(temp, i);
+                }
+                com->calcCRC(com->RCBuffer);
+                pthread_mutex_unlock(&RCbufLock);
+            }
+        }
+        else if (items [1].revents & ZMQ_POLLIN)
+        {
+            if(s_interrupted == 1)
+            {
+                cout << "break" << endl;
+                break;
+            }
+        }
         //Subscriber End
-        pthread_mutex_lock(&RCbufLock);
-        //Edit to add RCBuffer Modification
-        
-        pthread_mutex_unlock(&RCbufLock);
     }
 }
 

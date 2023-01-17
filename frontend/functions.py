@@ -248,7 +248,6 @@ if __name__ == '__main__':
 
     time.sleep(0.5)
     publish(data)
-
     cmd_publisher(cmd_type)
 
     # p_thread = Thread(target=publish(data))

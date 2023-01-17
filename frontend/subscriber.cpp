@@ -31,6 +31,7 @@ void startSubscriber()
         zmq::message_t topic;
         zmq::message_t msg;
         zmq::poll (&items [0], 2, -1);
+        cout << "AA" << endl;
         if (items [0].revents & ZMQ_POLLIN)
         {
             cout << "waiting on recv..." << endl;
@@ -50,6 +51,7 @@ void startSubscriber()
                 break;
             }
         }
+        cout << "AA" << endl;
     }
 }
 
