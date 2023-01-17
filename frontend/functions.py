@@ -17,20 +17,12 @@ def publish(data):
 
         stri += ","
     
-    stri = topic + " " + stri
+    
+    publisher.send_string(topic)
 
-    for _ in range (0,3):
-        try:
-            publisher.send(stri.encode('utf-8'))
-            
-            print(stri)
-        except zmq.ZMQError as e:
-            if e.errno == zmq.ETERM:
-                raise(e.errno)
-            else:
-                raise
-        
-        time.sleep(0.1)
+    publisher.send_string(stri)
+
+   
 
 
 def listener_thread (pipe):
@@ -244,6 +236,8 @@ if __name__ == '__main__':
  
     publisher = ctx.socket(zmq.XPUB)
     publisher.bind("tcp://127.0.0.1:6000")
+
+    time.sleep(0.5)
 
     publish(data)
 
