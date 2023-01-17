@@ -86,7 +86,16 @@ class req ():
 
     def forward(self):
 
-        self.pitch += 200
+        temp = self.pitch + 200
+        
+        arr = [str(self.roll), str(temp), str(self.yaw), str(self.throttle), str(
+            self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+
+        
+        publish(arr)
+        print("FORWARD IS CALLED ")
+    
+    def resend (self):
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -94,6 +103,7 @@ class req ():
         
         publish(arr)
         print("FORWARD IS CALLED ")
+
 
     def backward(self):
 
@@ -135,6 +145,7 @@ class req ():
 
     def right_yaw(self):
 
+        temp = self.yaw + 200
         self.yaw += 200
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
@@ -288,6 +299,7 @@ if __name__ == '__main__':
             test.land()
            
         elif key == 119:
+
             test.forward()
             print('w')
         elif key == 115:
