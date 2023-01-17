@@ -209,6 +209,6 @@ int main(){
     //int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
 
     pthread_join(RC, NULL);
-    pthread_join(Comm, NULL);
+    //pthread_join(Comm, NULL);
     sleep(5);
 }
