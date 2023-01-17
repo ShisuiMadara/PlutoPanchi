@@ -245,7 +245,7 @@ if __name__ == '__main__':
 
     test = req(1500,1500,1500,1500,True,True,True,False,0)
 
-    data = [1500,1500,1500,1500,True,True,True,False]
+    data = [1500,1900,1500,1500,True,True,True,False]
 
     cmd_type = 0
 
