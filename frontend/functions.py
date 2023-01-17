@@ -2,6 +2,7 @@ import zmq
 from zmq.devices import monitored_queue
 from threading import Thread
 import time 
+import curses
 
 publisher = None
 def publish(data):
@@ -156,6 +157,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+        cmd_publisher(self.command_type)
 
     def land(self):
 
@@ -164,6 +166,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+        cmd_publisher(self.command_type)
 
     def back_flip(self):
 
@@ -172,6 +175,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+        cmd_publisher(self.command_type)
 
     def front_flip(self):
 
@@ -180,6 +184,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+        cmd_publisher(self.command_type)
 
     def right_flip(self):
 
@@ -188,6 +193,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+        cmd_publisher(self.command_type)
 
     def left_flip(self):
 
@@ -196,6 +202,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+        cmd_publisher(self.command_type)
 
     def set_roll(self, rol):
 
@@ -243,18 +250,54 @@ if __name__ == '__main__':
 
     ctx = zmq.Context.instance()
 
-    test = req(1500,1500,1500,1500,True,True,True,False,0)
+    # data = [1500,1500,1500,1500,True,True,True,False]
 
-    data = [1500,1500,1500,1500,True,True,True,False]
-
-    cmd_type = 0
+    # cmd_type = 0
 
     publisher = ctx.socket(zmq.XPUB)
     publisher.bind("tcp://127.0.0.1:6000")
 
     time.sleep(0.5)
-    publish(data)
-    cmd_publisher(cmd_type)
+
+    stdscr = curses.initscr()
+
+    stdscr.keypad(1)
+
+    stdscr.addstr("Hit 'q' to quit")
+    stdscr.refresh()
+
+    key = ''
+    test = req(1500,1500,1500,1500,True,True,True,False,0)
+
+    while key != ord('q'):
+        key = stdscr.getch()
+        
+    
+        if key == curses.KEY_UP: 
+            test.take_off()
+            
+        elif key == curses.KEY_DOWN: 
+            test.land()
+           
+        elif key == 119:
+            test.forward()
+        elif key == 115:
+            test.backward()
+        elif key == 97:
+            test.left()
+        elif key == 100:
+            test.right()
+        elif key == 32:
+            test.arm()
+        
+    
+        
+
+    curses.endwin()
+
+
+    # publish(data)
+    # cmd_publisher(cmd_type)
 
     # p_thread = Thread(target=publish(data))
     # p_thread.start()
