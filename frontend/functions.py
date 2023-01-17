@@ -18,7 +18,7 @@ def publish(data):
         stri += ","
     
 
-    publisher.send_string(topic)
+    publisher.send_string(topic, flags=zmq.SNDMORE)
     publisher.send_string(stri)
 
 def cmd_publisher(cmd_type):
@@ -28,8 +28,7 @@ def cmd_publisher(cmd_type):
     topic = "cmd"
     stri += str(cmd_type)
 
-    print(stri)
-    publisher.send_string(topic)
+    publisher.send_string(topic, flags=zmq.SNDMORE)
     publisher.send_string(stri)
    
 
