@@ -72,6 +72,7 @@ class req ():
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
         publish(arr)
+        print("ARM IS CALLED ")
 
     def disarm(self):
 
@@ -90,7 +91,9 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
+        
         publish(arr)
+        print("FORWARD IS CALLED ")
 
     def backward(self):
 
@@ -99,7 +102,9 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
+        
         publish(arr)
+        print("BACKWARD IS CALLED")
 
     def left(self):
 
@@ -108,6 +113,7 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+        print("LEFT IS CALLED")
 
     def right(self):
 
@@ -116,6 +122,8 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
+
+        print("RIGHT IS CALLED")
 
     def left_yaw(self):
 
@@ -281,14 +289,19 @@ if __name__ == '__main__':
            
         elif key == 119:
             test.forward()
+            print('w')
         elif key == 115:
             test.backward()
+            print('s')
         elif key == 97:
             test.left()
+            print('a')
         elif key == 100:
             test.right()
+            print('d')
         elif key == 32:
             test.arm()
+            print("SPACE ")
         
     
         
