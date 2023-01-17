@@ -19,16 +19,40 @@ def publish(data):
     
     stri = topic + " " + stri
 
-    try:
-        publisher.send(stri.encode('utf-8'))
+    for _ in range (0,3):
+        try:
+            publisher.send(stri.encode('utf-8'))
+            
+            print(stri)
+        except zmq.ZMQError as e:
+            if e.errno == zmq.ETERM:
+                raise(e.errno)
+            else:
+                raise
         
-        print(stri)
-    except zmq.ZMQError as e:
-        if e.errno == zmq.ETERM:
-            raise(e.errno)
-        else:
-            raise
+        time.sleep(0.1)
+
+# def publish(data):
+#     stri = ""
+
+#     for i in range(0, len(data)):
+#         stri += data
+
+#         if(i == len(data) - 1):
+#             continue
+
+#         stri += ","
+
+#         try:
+#             publisher.send(stri.encode('utf-8'))
+#         except zmq.ZMQError as e:
+#             if e.errno == zmq.ETERM:
+#                 raise(e.errno)
+#             else:
+#                 raise
     
+#         print(stri)
+#         time.sleep(0.1)
         
 
 def listener_thread (pipe):
@@ -250,4 +274,60 @@ if __name__ == '__main__':
 
     # del  publisher
     ctx.term()
-   
+
+# import zmq
+# from zmq.devices import monitored_queue
+# from threading import Thread
+# import time 
+
+# publisher = None
+# def publish(data):
+#     stri = ""
+
+#     for i in range(0, len(data)):
+#         stri += data
+
+#         if(i == len(data) - 1):
+#             continue
+
+#         stri += ","
+
+#         try:
+#             publisher.send(stri.encode('utf-8'))
+#         except zmq.ZMQError as e:
+#             if e.errno == zmq.ETERM:
+#                 raise(e.errno)
+#             else:
+#                 raise
+    
+#         print(stri)
+#         time.sleep(0.1)
+
+# def listener_thread (pipe):
+    
+#     while True:
+#         try:
+#             print (pipe.recv_multipart())
+#         except zmq.ZMQError as e:
+#             if e.errno == zmq.ETERM:
+#                 break           
+
+
+
+# if __name__ == '__main__':
+
+#     ctx = zmq.Context.instance()
+
+#     data = "1500,1500,1500,1500,True,True,True,False,0"
+
+ 
+#     publisher = ctx.socket(zmq.XPUB)
+#     publisher.bind("tcp://127.0.0.1:6000")
+
+#     p_thread = Thread(target=publish(data))
+#     p_thread.start()
+
+
+
+#     del  publisher
+#     ctx.term()
