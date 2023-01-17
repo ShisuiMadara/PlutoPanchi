@@ -7,24 +7,29 @@ publisher = None
 def publish(data):
     stri = ""
 
+    topic = "front"
+
     for i in range(0, len(data)):
-        stri += data
+        stri += str(data[i])
 
         if(i == len(data) - 1):
             continue
 
         stri += ","
-
-        try:
-            publisher.send(stri.encode('utf-8'))
-        except zmq.ZMQError as e:
-            if e.errno == zmq.ETERM:
-                raise(e.errno)
-            else:
-                raise
     
+    stri = topic + " " + stri
+
+    try:
+        publisher.send(stri.encode('utf-8'))
+        
         print(stri)
-        time.sleep(0.1)
+    except zmq.ZMQError as e:
+        if e.errno == zmq.ETERM:
+            raise(e.errno)
+        else:
+            raise
+    
+        
 
 def listener_thread (pipe):
     
@@ -232,17 +237,17 @@ if __name__ == '__main__':
 
     test = req(1500,1500,1500,1500,True,True,True,False,0)
 
-    data = "1500,1500,1500,1500,True,True,True,False,0"
+    data = [1500,1500,1500,1500,True,True,True,False,0]
 
  
     publisher = ctx.socket(zmq.XPUB)
     publisher.bind("tcp://127.0.0.1:6000")
 
-    p_thread = Thread(target=publish(data))
-    p_thread.start()
+    publish(data)
 
+    # p_thread = Thread(target=publish(data))
+    # p_thread.start()
 
-
-    del  publisher
+    # del  publisher
     ctx.term()
    
