@@ -23,12 +23,13 @@ void* get_command_req (void* com) {
 	Communication* comm = (Communication*) com;
 
 	while(true) {
-
+		int a = 2;
 		//call subscriber
-
+		zactor_t *subsriber_actor = zactor_new(subscriber_task, (void *)a);
 		pthread_mutex_lock(&socketLock);
 	    write(SockID, &com->command_buffer[0], com->command_buffer.size());
 	    pthread_mutex_unlock(&socketLock);
+		zactor_destroy(&subsriber_actor);
 	      
 	}
  }

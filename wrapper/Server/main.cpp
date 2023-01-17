@@ -14,13 +14,14 @@
 
 using namespace std;
 
-// int PORT = 6000;
-// char* IP_ADDR = "127.0.0.1";
 int PORT = 23;
 char* IP_ADDR = "192.168.4.1";
+// int PORT = 12000;
+// char* IP_ADDR = "127.0.0.1";
+
 int SockID;
 pthread_mutex_t socketLock, RCbufLock;
-
+void get_command_req (void*);
 class Communication{
 public:
     vector<uint8_t> RCBuffer;
@@ -29,11 +30,11 @@ public:
 
     Communication(){
         RCBuffer = vector<uint8_t>(22);
-        command_buffer = vector<uint8_t>(7);
+        command_buffer = vector<uint8_t>(8);
     }
     void calcCRC(vector<uint8_t>& buf){
         uint8_t crc = 0;
-        for (int i = 4; i < buf.size() - 1; i++){
+        for (int i = 3; i < buf.size() - 1; i++){
             crc ^= buf[i];
         }
         buf[buf.size() - 1] = crc;
@@ -61,18 +62,23 @@ public:
             if (errno == EINPROGRESS) cout << "bb";
             return false;
         }
-        if ((arg = fcntl(SockID, F_GETFL, NULL)) < 0){
-            cout << "Connection Failure!" << endl;
-            return false;
-        }
-        arg &= (~O_NONBLOCK);
-        if (fcntl(SockID, F_SETFL, arg) < 0){
-            cout << "Connection Failure!" << endl;
+        int optval = 1;
+        int optlen = sizeof(optval);
+
+        if(setsockopt(SockID, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen) < 0) {
             return false;
         }
 
-        int optval;
-        socklen_t optlen;
+        int error = 0 ;
+        socklen_t len = sizeof(error);
+
+
+        int retval = getsockopt(SockID, SOL_SOCKET, SO_ERROR, &error, &len);
+
+        if(error != 0) {
+            return false;
+        }
+
         cout << "Pluto Connected" << endl;
         return true;
     }
@@ -94,6 +100,7 @@ public:
         for (int i = 4; i < 8; i++){
             addRCBuffer(1500, i);
         }
+        addRCBuffer(1600, 2);
         calcCRC(RCBuffer);
     }
 
@@ -101,9 +108,11 @@ public:
         command_buffer[0] = '$';
         command_buffer[1] = 'M';
         command_buffer[2] = '<';
-        command_buffer[3] = (uint8_t) 1;
+        command_buffer[3] = (uint8_t) 2;
         command_buffer[4] = (uint8_t) 217;
         command_buffer[5] = (uint8_t) 0;
+        command_buffer[6] = (uint8_t) 0;
+
 
         calcCRC(command_buffer); 
     }
@@ -112,13 +121,30 @@ public:
 
 void* sendRCRequests(void* comm){
     Communication* com = (Communication*) comm;
+    int i = 0;
     while(true){
+        
+        if (i == 55){
+            com->command_buffer[5] = (uint8_t)1;
+            com->calcCRC(com->command_buffer);
+
+            get_command_req(comm);
+        }
+        if (i == 300){
+            com->command_buffer[5] = (uint8_t)2;
+            com->addRCBuffer(1500, 2);
+            com->calcCRC(com->command_buffer);
+            com->calcCRC(com->RCBuffer);
+            get_command_req(comm);
+        }
         pthread_mutex_lock(&RCbufLock);
         pthread_mutex_lock(&socketLock);
-        write(SockID, &com->RCBuffer[0], com->RCBuffer.size());
-        usleep(5);
+        usleep(50000);
+        int x = send(SockID, &com->RCBuffer[0], com->RCBuffer.size(), 0);
+        cout << x << endl;
         pthread_mutex_unlock(&socketLock);
         pthread_mutex_unlock(&RCbufLock);
+        i++;
     }    
 }
 
@@ -135,20 +161,21 @@ void* getRCRequests(void* comm){
     }
 }
 
-void* get_command_req (void* comm) {
+void get_command_req (void* comm) {
 
     Communication* com = (Communication*) comm;
 
-    while(true) {
+    //while(true) {
 
         //call subscriber
-
+        cout<<"ll";
+        usleep(500);
         pthread_mutex_lock(&socketLock);
-        write(SockID, &com->command_buffer[0], com->command_buffer.size());
-        usleep(5);
+        send(SockID, &com->command_buffer[0], com->command_buffer.size(), 0);
         pthread_mutex_unlock(&socketLock);
+        usleep(50000);
           
-    }
+    //}
  }
 
 
@@ -164,7 +191,7 @@ int main(){
     comm->initRCBuffer();
     comm->init_command_buffer();
     comm->readyBuffer();
-    sleep(1);
+
     if (pthread_mutex_init(&socketLock, NULL) != 0){
         cout << "Mutex failure!" << endl;
         exit(1);
@@ -175,6 +202,9 @@ int main(){
     }
 
     pthread_t RC, Comm;
+
+    sleep(1);
+
     int RC_ = pthread_create(&RC, NULL, sendRCRequests, (void*) comm);
     //int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
 
