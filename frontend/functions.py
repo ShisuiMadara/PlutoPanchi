@@ -238,7 +238,6 @@ if __name__ == '__main__':
     publisher.bind("tcp://127.0.0.1:6000")
 
     time.sleep(0.5)
-
     publish(data)
 
     # p_thread = Thread(target=publish(data))
