@@ -66,7 +66,7 @@ void startSubscriber()
     zmq::socket_t killer_socket(zmq_context, ZMQ_PAIR); // This socket is used to terminate the loop on a signal
     killer_socket.bind("ipc://killmebaby");
 
-    zmq_socket.setsockopt(ZMQ_SUBSCRIBE, "front", 0); // Subscribe to any topic you want here
+    zmq_socket.setsockopt(ZMQ_SUBSCRIBE, "cmd", 0); // Subscribe to any topic you want here
     zmq::pollitem_t items [] = {
         { zmq_socket, 0, ZMQ_POLLIN, 0 },
         { killer_socket, 0, ZMQ_POLLIN, 0 }

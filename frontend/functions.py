@@ -17,11 +17,20 @@ def publish(data):
 
         stri += ","
     
-    
-    publisher.send_string(topic)
 
+    publisher.send_string(topic)
     publisher.send_string(stri)
 
+def cmd_publisher(cmd_type):
+
+    stri = ""
+
+    topic = "cmd"
+    stri += str(cmd_type)
+
+    print(stri)
+    publisher.send_string(topic)
+    publisher.send_string(stri)
    
 
 
@@ -231,15 +240,18 @@ if __name__ == '__main__':
 
     test = req(1500,1500,1500,1500,True,True,True,False,0)
 
-    data = [1500,1500,1500,1500,True,True,True,False,0]
+    data = [1500,1500,1500,1500,True,True,True,False]
 
- 
+    cmd_type = 0
+
     publisher = ctx.socket(zmq.XPUB)
     publisher.bind("tcp://127.0.0.1:6000")
 
     time.sleep(0.5)
 
     publish(data)
+
+    cmd_publisher(cmd_type)
 
     # p_thread = Thread(target=publish(data))
     # p_thread.start()
