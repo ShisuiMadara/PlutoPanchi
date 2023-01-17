@@ -10,12 +10,18 @@ def publish(data):
     topic = "front"
 
     for i in range(0, len(data)):
+
+        if(data[i] == True):
+            data[i] = 1
+        elif (data[i] == False):
+            data[i] = 0
+
         stri += str(data[i])
 
         if(i == len(data) - 1):
             continue
 
-        stri += ","
+        stri += " "
     
 
     publisher.send_string(topic, flags=zmq.SNDMORE)
