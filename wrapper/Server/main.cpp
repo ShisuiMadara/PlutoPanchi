@@ -21,7 +21,7 @@ char* IP_ADDR = "192.168.4.1";
 
 int SockID;
 pthread_mutex_t socketLock, RCbufLock;
-void get_command_req (void*);
+void* get_command_req (void*);
 class Communication{
 public:
     vector<uint8_t> RCBuffer;
@@ -97,7 +97,7 @@ public:
         calcCRC(RCBuffer);
     }
     void readyBuffer(){
-        for (int i = 4; i < 8; i++){
+        for (int i = 4; i < 7; i++){
             addRCBuffer(1500, i);
         }
         addRCBuffer(1600, 2);
@@ -124,19 +124,19 @@ void* sendRCRequests(void* comm){
     int i = 0;
     while(true){
         
-        if (i == 55){
-            com->command_buffer[5] = (uint8_t)1;
-            com->calcCRC(com->command_buffer);
+        // if (i == 55){
+        //     com->command_buffer[5] = (uint8_t)1;
+        //     com->calcCRC(com->command_buffer);
 
-            get_command_req(comm);
-        }
-        if (i == 300){
-            com->command_buffer[5] = (uint8_t)2;
-            com->addRCBuffer(1500, 2);
-            com->calcCRC(com->command_buffer);
-            com->calcCRC(com->RCBuffer);
-            get_command_req(comm);
-        }
+        //     get_command_req(comm);
+        // }
+        // if (i == 300){
+        //     com->command_buffer[5] = (uint8_t)2;
+        //     com->addRCBuffer(1500, 2);
+        //     com->calcCRC(com->command_buffer);
+        //     com->calcCRC(com->RCBuffer);
+        //     get_command_req(comm);
+        // }
         pthread_mutex_lock(&RCbufLock);
         pthread_mutex_lock(&socketLock);
         usleep(50000);
@@ -161,21 +161,18 @@ void* getRCRequests(void* comm){
     }
 }
 
-void get_command_req (void* comm) {
+void* get_command_req (void* comm) {
 
     Communication* com = (Communication*) comm;
 
-    //while(true) {
-
+    while(true) {
         //call subscriber
         cout<<"ll";
-        usleep(500);
+        usleep(50000);
         pthread_mutex_lock(&socketLock);
         send(SockID, &com->command_buffer[0], com->command_buffer.size(), 0);
-        pthread_mutex_unlock(&socketLock);
-        usleep(50000);
-          
-    //}
+        pthread_mutex_unlock(&socketLock);  
+    }
  }
 
 
@@ -206,9 +203,9 @@ int main(){
     sleep(1);
 
     int RC_ = pthread_create(&RC, NULL, sendRCRequests, (void*) comm);
-    //int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
+    int Comm_ = pthread_create(&Comm, NULL, get_command_req, (void*) comm); 
 
     pthread_join(RC, NULL);
-    //pthread_join(Comm, NULL);
+    pthread_join(Comm, NULL);
     sleep(5);
 }
