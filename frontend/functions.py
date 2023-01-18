@@ -1,30 +1,53 @@
 import zmq
 from zmq.devices import monitored_queue
+from threading import Thread
+import time 
+import curses
 
-ctx = zmq.Context.instance()
-publisher = ctx.socket(zmq.PUB)
-publisher.bind("tcp://*:6000")
-
-
+publisher = None
 def publish(data):
     stri = ""
 
-    for i in range(0, data.length()):
-        stri += data
+    topic = "front"
 
-        if(i == data.length - 1):
+    for i in range(0, len(data)):
+
+        if(data[i] == True):
+            data[i] = 1
+        elif (data[i] == False):
+            data[i] = 0
+
+        stri += str(data[i])
+
+        if(i == len(data) - 1):
             continue
 
-        stri += ","
+        stri += " "
+    
 
+    publisher.send_string(topic, flags=zmq.SNDMORE)
+    publisher.send_string(stri)
+
+def cmd_publisher(cmd_type):
+
+    stri = ""
+
+    topic = "cmd"
+    stri += str(cmd_type)
+
+    publisher.send_string(topic, flags=zmq.SNDMORE)
+    publisher.send_string(stri)
+   
+
+
+def listener_thread (pipe):
+    
+    while True:
         try:
-            publisher.send(stri.encode('utf-8'))
+            print (pipe.recv_multipart())
         except zmq.ZMQError as e:
             if e.errno == zmq.ETERM:
-                throw(e.errno)
-            else:
-                raise
-        time.sleep(0.1)
+                break           
 
 
 class req ():
@@ -48,7 +71,8 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
-        self.publish(arr)
+        publish(arr)
+        print("ARM IS CALLED ")
 
     def disarm(self):
 
@@ -57,16 +81,29 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        
+        publish(arr)
 
     def forward(self):
 
-        self.pitch += 200
+        temp = self.pitch + 200
+        
+        arr = [str(self.roll), str(temp), str(self.yaw), str(self.throttle), str(
+            self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+
+        
+        publish(arr)
+        print("FORWARD IS CALLED ")
+    
+    def resend (self):
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
-        self.publish(arr)
+        
+        publish(arr)
+        print("FORWARD IS CALLED ")
+
 
     def backward(self):
 
@@ -75,7 +112,9 @@ class req ():
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
-        self.publish(arr)
+        
+        publish(arr)
+        print("BACKWARD IS CALLED")
 
     def left(self):
 
@@ -83,7 +122,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+        print("LEFT IS CALLED")
 
     def right(self):
 
@@ -91,7 +131,9 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+
+        print("RIGHT IS CALLED")
 
     def left_yaw(self):
 
@@ -99,15 +141,16 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def right_yaw(self):
 
+        temp = self.yaw + 200
         self.yaw += 200
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def increase_height(self):
 
@@ -115,7 +158,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def decrease_height(self):
 
@@ -123,7 +166,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def take_off(self):
 
@@ -132,7 +175,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+        cmd_publisher(self.command_type)
 
     def land(self):
 
@@ -140,7 +184,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+        cmd_publisher(self.command_type)
 
     def back_flip(self):
 
@@ -148,7 +193,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+        cmd_publisher(self.command_type)
 
     def front_flip(self):
 
@@ -156,7 +202,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+        cmd_publisher(self.command_type)
 
     def right_flip(self):
 
@@ -164,7 +211,8 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+        cmd_publisher(self.command_type)
 
     def left_flip(self):
 
@@ -172,14 +220,15 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
+        cmd_publisher(self.command_type)
 
     def set_roll(self, rol):
 
         self.roll = rol
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def set_pitch(self, pit):
 
@@ -187,14 +236,14 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)  # publish
+        publish(arr)  # publish
 
     def set_yaw(self, ya):
 
         self.yaw = ya
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def set_throttle(self, throt):
 
@@ -202,7 +251,7 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
     def reset(self):
 
@@ -213,8 +262,71 @@ class req ():
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        self.publish(arr)
+        publish(arr)
 
 
 if __name__ == '__main__':
-    test = req()
+
+    ctx = zmq.Context.instance()
+
+    # data = [1500,1500,1500,1500,True,True,True,False]
+
+    # cmd_type = 0
+
+    publisher = ctx.socket(zmq.XPUB)
+    publisher.bind("tcp://127.0.0.1:6000")
+
+    time.sleep(0.5)
+
+    stdscr = curses.initscr()
+
+    stdscr.keypad(1)
+
+    stdscr.addstr("Hit 'q' to quit")
+    stdscr.refresh()
+
+    key = ''
+    test = req(1500,1500,1500,1500,True,True,True,False,0)
+
+    while key != ord('q'):
+        key = stdscr.getch()
+        
+    
+        if key == curses.KEY_UP: 
+            test.take_off()
+            
+        elif key == curses.KEY_DOWN: 
+            test.land()
+           
+        elif key == 119:
+
+            test.forward()
+            print('w')
+        elif key == 115:
+            test.backward()
+            print('s')
+        elif key == 97:
+            test.left()
+            print('a')
+        elif key == 100:
+            test.right()
+            print('d')
+        elif key == 32:
+            test.arm()
+            print("SPACE ")
+        
+    
+        
+
+    curses.endwin()
+
+
+    # publish(data)
+    # cmd_publisher(cmd_type)
+
+    # p_thread = Thread(target=publish(data))
+    # p_thread.start()
+
+    # del  publisher
+    ctx.term()
+
