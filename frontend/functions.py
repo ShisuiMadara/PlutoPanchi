@@ -86,9 +86,9 @@ class req ():
 
     def forward(self):
 
-        temp = self.pitch + 200
+        self.pitch = min(self.pitch + 200, 2100)
         
-        arr = [str(self.roll), str(temp), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
         
@@ -107,7 +107,7 @@ class req ():
 
     def backward(self):
 
-        self.pitch -= 200
+        self.pitch = max(self.pitch - 200, 1500)
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -118,7 +118,7 @@ class req ():
 
     def left(self):
 
-        self.roll -= 200
+        self.roll = max(self.roll - 200, 1500)
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -127,7 +127,7 @@ class req ():
 
     def right(self):
 
-        self.roll += 200
+        self.roll = min(self.roll + 200, 2100)
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -137,7 +137,11 @@ class req ():
 
     def left_yaw(self):
 
-        self.yaw -= 200
+        if(self.yaw == 1500):
+            print("Max left yaw reached")
+            pass
+
+        self.yaw = max(self.yaw - 200, 1500)
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -145,8 +149,10 @@ class req ():
 
     def right_yaw(self):
 
-        temp = self.yaw + 200
-        self.yaw += 200
+        if(self.yaw == 2100):
+            print("Max right yaw reached")
+
+        self.yaw = min(self.yaw + 200, 2100) 
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -154,7 +160,11 @@ class req ():
 
     def increase_height(self):
 
-        self.throttle += 100
+        if(self.throttle == 2100):
+            print("Max throttle. Cannot increase")
+            pass
+
+        self.throttle = min(self.throttle + 100, 2100)
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -162,7 +172,11 @@ class req ():
 
     def decrease_height(self):
 
-        self.throttle -= 100
+        if(self.throttle == 1500):
+            print("Throttle at minimum. Cannot decrease")
+            pass 
+
+        self.throttle = max(self.throttle - 100, 1500)
 
         arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
@@ -292,29 +306,55 @@ if __name__ == '__main__':
         key = stdscr.getch()
         
     
-        if key == curses.KEY_UP: 
+        if key == 49: 
             test.take_off()
-            
-        elif key == curses.KEY_DOWN: 
+            print("Zooommm")
+        elif key == 50: 
             test.land()
-           
-        elif key == 119:
+            print("Landing safely....")
+        elif key == 51:
+            test.back_flip()
+            print("Back FLIP !!!")
+        elif key == 52:
+            test.front_flip()
+            print("Front FLIPP !!!!")
+        elif key == 53:
+            test.right_flip()
+            print("Right FLIP!!!")
+        elif key == 54:
+            test.left_flip
+            print("LEFT FLIPP!!")
+        
 
+        elif key == 119:
             test.forward()
-            print('w')
+            print("Going forward...")
         elif key == 115:
             test.backward()
-            print('s')
+            print("Going backward")
         elif key == 97:
             test.left()
-            print('a')
+            print("Going left")
         elif key == 100:
             test.right()
-            print('d')
+            print("Going right")
         elif key == 32:
-            test.arm()
-            print("SPACE ")
-        
+
+            if(test.is_armed):
+                test.land()
+                print("Landing safely to disarm")
+                test.disarm()
+                print("Disarmed")   
+            else:
+                test.arm()
+                print("Arming !!")
+
+        elif key == curses.KEY_UP:
+            test.increase_height()
+            print("increasing height...")
+        elif key == curses.KEY_DOWN:
+            test.decrease_height()
+            print("decreasing height...")
     
         
 
@@ -329,4 +369,3 @@ if __name__ == '__main__':
 
     # del  publisher
     ctx.term()
-
