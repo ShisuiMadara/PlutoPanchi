@@ -2,6 +2,8 @@ import cv2
 import pyrealsense2
 from realsense_depth import *
 import cv2.aruco as aruco
+import zmq
+import time
 
 point = (400, 300)
 
@@ -15,6 +17,15 @@ dc = DepthCamera()
 # Create mouse event
 # cv2.namedWindow("Color frame")
 # cv2.setMouseCallback("Color frame", show_distance)
+
+publisher = None
+def publish(data):
+
+    stri = str(data)
+    topic = "pose"
+
+    publisher.send_string(topic, flags=zmq.SNDMORE)
+    publisher.send_string(stri)
 
 
 def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
@@ -40,6 +51,8 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
 
         center = ((x1 + x)// 2), int((y + y1)// 2)
         # print(center)
+    
+    publish(center)
 
     return center
 
@@ -63,3 +76,14 @@ while True:
     key = cv2.waitKey(1)
     if key == 27:
         break
+
+if __name__ == '__main__':
+
+    ctx = zmq.Context.instance()
+
+    publisher = ctx.socket(zmq.XPUB)
+    publisher.bind("tcp://127.0.0.1:6000")
+
+    time.sleep(0.5)
+
+    ctx.term()
