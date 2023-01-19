@@ -68,7 +68,7 @@ class req ():
         # do arming
         self.is_armed = True
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
         publish(arr)
@@ -79,16 +79,16 @@ class req ():
         # do disarming
         self.is_armed = False
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         
         publish(arr)
 
     def forward(self):
 
-        self.pitch = min(self.pitch + 200, 2100)
+        self.pitch = min(self.pitch + 100, 2100)
         
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
         
@@ -97,7 +97,7 @@ class req ():
     
     def resend (self):
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
         
@@ -106,10 +106,11 @@ class req ():
 
 
     def backward(self):
+        print("initial pitch {}".format(self.pitch))
 
-        self.pitch = max(self.pitch - 200, 1500)
+        self.pitch = max(self.pitch - 100, 900)
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
 
         
@@ -118,18 +119,18 @@ class req ():
 
     def left(self):
 
-        self.roll = max(self.roll - 200, 1500)
+        self.roll = max(self.roll - 100, 900)
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
         print("LEFT IS CALLED")
 
     def right(self):
 
-        self.roll = min(self.roll + 200, 2100)
+        self.roll = min(self.roll + 100, 2100)
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
@@ -137,13 +138,13 @@ class req ():
 
     def left_yaw(self):
 
-        if(self.yaw == 1500):
+        if(self.yaw == 900):
             print("Max left yaw reached")
             pass
 
-        self.yaw = max(self.yaw - 200, 1500)
+        self.yaw = max(self.yaw - 100, 900)
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
@@ -152,9 +153,9 @@ class req ():
         if(self.yaw == 2100):
             print("Max right yaw reached")
 
-        self.yaw = min(self.yaw + 200, 2100) 
+        self.yaw = min(self.yaw + 100, 2100) 
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
@@ -166,28 +167,29 @@ class req ():
 
         self.throttle = min(self.throttle + 100, 2100)
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
     def decrease_height(self):
 
-        if(self.throttle == 1500):
+        if(self.throttle == 900):
             print("Throttle at minimum. Cannot decrease")
             pass 
 
-        self.throttle = max(self.throttle - 100, 1500)
+        self.throttle = max(self.throttle - 100, 900)
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
     def take_off(self):
 
-        self.arm()
+        if(not self.is_armed):
+            self.arm()
         self.command_type = 1
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
         cmd_publisher(self.command_type)
@@ -196,7 +198,7 @@ class req ():
 
         self.command_type = 2
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
         cmd_publisher(self.command_type)
@@ -205,7 +207,7 @@ class req ():
 
         self.command_type = 3
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
         cmd_publisher(self.command_type)
@@ -214,7 +216,7 @@ class req ():
 
         self.command_type = 4
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
         cmd_publisher(self.command_type)
@@ -223,7 +225,7 @@ class req ():
 
         self.command_type = 5
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
         cmd_publisher(self.command_type)
@@ -232,7 +234,7 @@ class req ():
 
         self.command_type = 6
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
         cmd_publisher(self.command_type)
@@ -240,7 +242,7 @@ class req ():
     def set_roll(self, rol):
 
         self.roll = rol
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
@@ -248,14 +250,14 @@ class req ():
 
         self.pitch = pit
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)  # publish
 
     def set_yaw(self, ya):
 
         self.yaw = ya
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
@@ -263,7 +265,7 @@ class req ():
 
         self.throttle = throt
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
@@ -274,7 +276,7 @@ class req ():
         self.pitch = 1500
         self.throttle = 1500
 
-        arr = [str(self.roll), str(self.pitch), str(self.yaw), str(self.throttle), str(
+        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
