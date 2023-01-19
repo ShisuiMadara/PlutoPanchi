@@ -19,10 +19,10 @@ using namespace std;
 
 static int s_interrupted = 0;
 
-// int PORT = 23;
-// char* IP_ADDR = "192.168.4.1";
-int PORT = 12000;
-char* IP_ADDR = "127.0.0.1";
+int PORT = 23;
+char* IP_ADDR = "192.168.4.1";
+// int PORT = 12000;
+// char* IP_ADDR = "127.0.0.1";
 
 int SockID;
 pthread_mutex_t socketLock, RCbufLock;
@@ -148,8 +148,8 @@ void* sendRCRequests(void* comm){
         int x = send(SockID, &com->RCBuffer[0], com->RCBuffer.size(), 0);
         cout << x << endl;
         pthread_mutex_unlock(&socketLock);
-        usleep(500);
         pthread_mutex_unlock(&RCbufLock);
+        usleep(500);
         i++;
     }    
 }
