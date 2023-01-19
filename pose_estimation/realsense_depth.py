@@ -1,22 +1,5 @@
 import pyrealsense2 as rs
 import numpy as np
-import zmq
-import time
-
-publisher = None
-def publish(data):
-    stri = ""
-
-    topic = "depth"
-
-    for i in range(0, len(data)):
-
-        stri += str(data[i])
-
-    
-
-    publisher.send_string(topic, flags=zmq.SNDMORE)
-    publisher.send_string(stri)
 
 class DepthCamera:
     def __init__(self):
@@ -44,7 +27,6 @@ class DepthCamera:
         color_frame = frames.get_color_frame()
 
         depth_image = np.asanyarray(depth_frame.get_data())
-        publish(depth_image)
 
         color_image = np.asanyarray(color_frame.get_data())
         if not depth_frame or not color_frame:
@@ -54,12 +36,3 @@ class DepthCamera:
     def release(self):
         self.pipeline.stop()
 
-if __name__ == '__main__':
-
-    ctx = zmq.Context.instance()
-
-    publisher = ctx.socket(zmq.XPUB)
-    publisher.bind("tcp://127.0.0.1:6000")
-
-    time.sleep(0.5)
-    ctx.term()

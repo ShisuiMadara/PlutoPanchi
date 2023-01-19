@@ -21,8 +21,21 @@ dc = DepthCamera()
 publisher = None
 def publish(data):
 
-    stri = str(data)
+    stri = ""
     topic = "pose"
+
+    for i in data:
+        stri += str(i)
+
+    publisher.send_string(topic, flags=zmq.SNDMORE)
+    publisher.send_string(stri)
+
+def height(data):
+
+    stri = str(data)
+
+    topic = "height"
+
 
     publisher.send_string(topic, flags=zmq.SNDMORE)
     publisher.send_string(stri)
@@ -58,24 +71,7 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
 
 
 
-while True:
-    ret, depth_frame, color_frame = dc.get_frame()
 
-    center = detectMarker(color_frame)
-    # Show distance for a specific point
-    # print(point, center)
-
-    if center:
-        cv2.circle(color_frame, (int(center[0]), int(center[1])), 6, (0, 0, 255))
-        distance = depth_frame[int(center[1]), int(center[0])]
-        cv2.putText(color_frame, "{}mm".format(distance), (point[0], point[1] - 200), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
-        detectMarker(color_frame)
-
-    cv2.imshow("depth frame", depth_frame)
-    cv2.imshow("Color frame", color_frame)
-    key = cv2.waitKey(1)
-    if key == 27:
-        break
 
 if __name__ == '__main__':
 
@@ -85,5 +81,25 @@ if __name__ == '__main__':
     publisher.bind("tcp://127.0.0.1:6000")
 
     time.sleep(0.5)
+
+    while True:
+        ret, depth_frame, color_frame = dc.get_frame()
+
+        center = detectMarker(color_frame)
+        # Show distance for a specific point
+        # print(point, center)
+
+        if center:
+            cv2.circle(color_frame, (int(center[0]), int(center[1])), 6, (0, 0, 255))
+            distance = depth_frame[int(center[1]), int(center[0])]
+            height(distance)
+            cv2.putText(color_frame, "{}mm".format(distance), (point[0], point[1] - 200), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
+            detectMarker(color_frame)
+
+        # cv2.imshow("depth frame", depth_frame)
+        # cv2.imshow("Color frame", color_frame)
+        key = cv2.waitKey(1)
+        if key == 27:
+            break
 
     ctx.term()
