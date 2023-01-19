@@ -22,7 +22,7 @@ publisher = None
 def publish(data):
 
     stri = ""
-    topic = "pose"
+    topic = "center"
 
     for i in data:
         stri += str(i)
@@ -36,7 +36,7 @@ def height(data):
 
     topic = "height"
 
-
+    print(stri)
     publisher.send_string(topic, flags=zmq.SNDMORE)
     publisher.send_string(stri)
 
@@ -82,6 +82,8 @@ if __name__ == '__main__':
 
     time.sleep(0.5)
 
+    
+
     while True:
         ret, depth_frame, color_frame = dc.get_frame()
 
@@ -93,11 +95,12 @@ if __name__ == '__main__':
             cv2.circle(color_frame, (int(center[0]), int(center[1])), 6, (0, 0, 255))
             distance = depth_frame[int(center[1]), int(center[0])]
             height(distance)
+           
             cv2.putText(color_frame, "{}mm".format(distance), (point[0], point[1] - 200), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
             detectMarker(color_frame)
 
-        # cv2.imshow("depth frame", depth_frame)
-        # cv2.imshow("Color frame", color_frame)
+        cv2.imshow("depth frame", depth_frame)
+        cv2.imshow("Color frame", color_frame)
         key = cv2.waitKey(1)
         if key == 27:
             break
