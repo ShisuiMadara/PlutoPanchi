@@ -67,8 +67,18 @@ class PID:
         return round(time.time() * 1000)
 
 
-def fun (s) :
-    pass
+publisher = None
+def adjust_throttle (s) :
+    
+    print(s)
+    stri = str(s)
+
+    topic = "pid"
+
+   
+    publisher.send_string(topic, flags=zmq.SNDMORE)
+    publisher.send_string(stri)
+    
 
 
 if __name__ == '__main__':
@@ -83,8 +93,19 @@ if __name__ == '__main__':
     pid = PID (expected_height, 2100, 900, 1500, 200, 0, 50)
 
     # print(current_height)
+    ctx = zmq.Context.instance()
 
-    pid.startPIDController(socket.recv, print )
+    # data = [1500,1500,1500,1500,True,True,True,False]
+
+    # cmd_type = 0
+
+    publisher = ctx.socket(zmq.XPUB)
+    publisher.bind("tcp://127.0.0.1:6000")
+
+    time.sleep(0.5)
+
+    pid.startPIDController(socket.recv, adjust_throttle)
+
 
 
 
