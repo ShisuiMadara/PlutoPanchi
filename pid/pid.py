@@ -1,5 +1,5 @@
 import time
-from pynput.keyboard import Listener
+import zmq 
 
 class PID:
     _Kp: int
@@ -10,12 +10,14 @@ class PID:
     _target: float
     _lowerBound: int
     _upperBound: int
+    _bias: int
 
     def __init__(
         self,
         target: float,
         upper: int,
         lower: int,
+        bias: int,
         proportionalConst: int = 0,
         integralConst: int = 0,
         deferentialConst: int = 0,
@@ -26,42 +28,64 @@ class PID:
         self._target = target
         self._lowerBound = lower
         self._upperBound = upper
+        self._bias = bias
 
     def _getNextVal(self, currentDistance: float) -> int:
         currentTime: int = self._getTime()
+        print(f'Distance {currentDistance}')
         timeInterval: int = currentTime - self._prevTime
-        currentError: float = self._getError(currentDistance, self._prevDistance)
+        currentError: float = self._getError(currentDistance)
         D_Val: float = (self._Kd * currentError) / timeInterval
         P_Val: float = self._Kp * currentError
-        I_Val: float = self._ki * currentError * timeInterval
-        PID_Val: int = round(P_Val + I_Val + D_Val)
+        I_Val: float = self._Ki * currentError * timeInterval
+        PID_Val: int = round(self._bias + P_Val + I_Val + D_Val)
+        print("Value is {}".format(PID_Val))
+        print("Error is {}".format(currentError))
         # update prevDistance and prevTime
-        self._prevDistance = currentDistance
         self._prevTime = currentTime
         # return output of PID
-        return min(max(PID_Val, self._lowerBound), self._upper)
+        return min(max(PID_Val, self._lowerBound), self._upperBound)
 
     def startPIDController(
         self,
-        dataFetcher : function,
-        respondTo : function
+        dataFetcher,
+        respondTo
     ) -> None:
         PID_Enabled : bool = True
-        # add listener to break as any key is pressed
-        def toggle():
-            PID_Enabled = not PID_Enabled
-        with Listener(on_press = toggle) as listener:
-            listener.join()
-        # initialize PID controller with current Value and current time
-        self._prevTime = self._getTime
-        self._prevDistance : float = float(dataFetcher())
+
+        self._prevTime = self._getTime()
         while 1:
             if PID_Enabled:
-                nextRPM : int = self._getNextVal(dataFetcher())
+                dataFetcher()
+                nextRPM : int = self._getNextVal(float(dataFetcher().decode('utf-8'))/1000)
                 respondTo(nextRPM)
 
-    def _getError(self, previousValue: float, currentValue: float) -> float:
-        return currentValue - previousValue
+    def _getError(self, currentValue: float) -> float:
+        return self._target - currentValue
 
     def _getTime(self) -> int:
         return round(time.time() * 1000)
+
+
+def fun (s) :
+    pass
+
+
+if __name__ == '__main__':
+
+    host = "127.0.0.1"
+    port = "6000"
+    context = zmq.Context()
+    socket = context.socket(zmq.SUB)
+    socket.connect("tcp://{}:{}".format(host, port))
+    socket.subscribe("height")
+    expected_height = 1.5
+    pid = PID (expected_height, 2100, 900, 1500, 200, 0, 50)
+
+    # print(current_height)
+
+    pid.startPIDController(socket.recv, print )
+
+
+
+    

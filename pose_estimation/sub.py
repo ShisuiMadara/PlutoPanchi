@@ -18,5 +18,5 @@ socket.subscribe("height")
 
 # Receives a string format message
 while(True):
-    socket.recv_string()
+    print(socket.recv().decode('utf-8'))
 
