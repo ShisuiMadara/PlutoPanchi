@@ -78,7 +78,7 @@ if __name__ == '__main__':
     ctx = zmq.Context.instance()
 
     publisher = ctx.socket(zmq.XPUB)
-    publisher.bind("tcp://127.0.0.1:6000")
+    publisher.bind("tcp://127.0.0.1:6001")
 
     time.sleep(0.5)
 

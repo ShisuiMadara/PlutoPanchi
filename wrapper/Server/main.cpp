@@ -144,7 +144,7 @@ void* sendRCRequests(void* comm){
         // }
         pthread_mutex_lock(&RCbufLock);
         pthread_mutex_lock(&socketLock);
-        usleep(50000);
+        usleep(5000);
         int x = send(SockID, &com->RCBuffer[0], com->RCBuffer.size(), 0);
         cout << x << endl;
         pthread_mutex_unlock(&socketLock);

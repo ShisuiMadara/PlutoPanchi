@@ -84,12 +84,12 @@ def adjust_throttle (s) :
 if __name__ == '__main__':
 
     host = "127.0.0.1"
-    port = "6000"
+    port = "6001"
     context = zmq.Context()
     socket = context.socket(zmq.SUB)
     socket.connect("tcp://{}:{}".format(host, port))
     socket.subscribe("height")
-    expected_height = 1.5
+    expected_height = 1
     pid = PID (expected_height, 2100, 900, 1500, 200, 0, 50)
 
     # print(current_height)
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     # cmd_type = 0
 
     publisher = ctx.socket(zmq.XPUB)
-    publisher.bind("tcp://127.0.0.1:6000")
+    publisher.bind("tcp://127.0.0.1:6002")
 
     time.sleep(0.5)
 

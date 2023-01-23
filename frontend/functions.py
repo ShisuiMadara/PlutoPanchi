@@ -282,20 +282,27 @@ class req ():
 
     def recieve_pid (self):
         host = "127.0.0.1"
-        port = "6000"
+        port = "6002"
         context = zmq.Context()
         socket = context.socket(zmq.SUB)
         socket.connect("tcp://{}:{}".format(host, port))
         socket.subscribe("pid")
 
-        while(True):
+
+        for i in range (0,1000):
             socket.recv()
             
-            self.throttle = socket.recv().decode('utf-8')
+            self.throttle = int(socket.recv().decode('utf-8'))
 
             arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
                 self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+            
+            time.sleep(0.01)
             publish(arr)
+    
+    def mok(self):
+        print("hoi")
+
 
     
 
@@ -322,6 +329,10 @@ if __name__ == '__main__':
     key = ''
     test = req(1500,1500,1500,1500,True,True,True,False,0)
     
+    
+    # Thread(target = test.recieve_pid()).start()
+    # Thread(target = test.mok()).start()
+
     while key != ord('q'):
         key = stdscr.getch()
         
@@ -329,10 +340,12 @@ if __name__ == '__main__':
         if key == 49: 
             test.take_off()
             print("Zooommm")
-            Thread(target = test.recieve_pid()).start()
+            # Thread(target = test.recieve_pid()).start()
+            #Thread(target = test.recieve_pid()).start()
         elif key == 50: 
             test.land()
             print("Landing safely....")
+            # Thread(target = test.recieve_pid()).start()
         elif key == 51:
             test.back_flip()
             print("Back FLIP !!!")
@@ -350,15 +363,19 @@ if __name__ == '__main__':
         elif key == 119:
             test.forward()
             print("Going forward...")
+            test.recieve_pid()
         elif key == 115:
             test.backward()
             print("Going backward")
+            test.recieve_pid()
         elif key == 97:
             test.left()
             print("Going left")
+            test.recieve_pid()
         elif key == 100:
             test.right()
             print("Going right")
+            test.recieve_pid()
         elif key == 32:
 
             if(test.is_armed):
@@ -373,9 +390,13 @@ if __name__ == '__main__':
         elif key == curses.KEY_UP:
             test.increase_height()
             print("increasing height...")
+            Thread(target = test.recieve_pid()).start()
         elif key == curses.KEY_DOWN:
             test.decrease_height()
             print("decreasing height...")
+            Thread(target = test.recieve_pid()).start()
+        else:
+            Thread(target = test.recieve_pid()).start()
     
         
 
