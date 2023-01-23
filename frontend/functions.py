@@ -280,6 +280,24 @@ class req ():
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
         publish(arr)
 
+    def recieve_pid (self):
+        host = "127.0.0.1"
+        port = "6000"
+        context = zmq.Context()
+        socket = context.socket(zmq.SUB)
+        socket.connect("tcp://{}:{}".format(host, port))
+        socket.subscribe("pid")
+
+        while(True):
+            socket.recv()
+            
+            self.throttle = socket.recv().decode('utf-8')
+
+            arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
+                self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+            publish(arr)
+
+    
 
 if __name__ == '__main__':
 
@@ -303,7 +321,7 @@ if __name__ == '__main__':
 
     key = ''
     test = req(1500,1500,1500,1500,True,True,True,False,0)
-
+    
     while key != ord('q'):
         key = stdscr.getch()
         
@@ -311,6 +329,7 @@ if __name__ == '__main__':
         if key == 49: 
             test.take_off()
             print("Zooommm")
+            Thread(target = test.recieve_pid()).start()
         elif key == 50: 
             test.land()
             print("Landing safely....")
