@@ -59,10 +59,12 @@ class PID:
                 dataFetcher()
                 recvData = dataFetcher().decode('utf-8').split()
 
-                for i in recvData:
-                    if i is None:
-                        i = 1500
-                        
+                for i in range(len(recvData)):
+                    if recvData[i] is None:
+                        recvData[i] = 1500
+                    if recvData[i] == 'None':
+                        recvData[i] = 1500
+
                 recievedData = [float(i)/1000 for i in recvData]
                 RPMS = []
                 for i in [0, 1, 2]:
@@ -111,7 +113,7 @@ if __name__ == '__main__':
     expected_height = 1.5
     expected_left_right = 0
 
-    pid = PID ([expected_height, 0, 0], 2100, 900, 1500, [100000, 0, 0], [0, 0, 0], [1000000, 0, 0])
+    pid = PID ([expected_height, 0, 0], 2100, 900, 1500, [100000, 0, 0], [100000, 0, 0], [1000000, 0, 0])
 
     # print(current_height)
     ctx = zmq.Context.instance()
