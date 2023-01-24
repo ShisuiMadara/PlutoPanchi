@@ -1,5 +1,6 @@
 import time
 import zmq 
+from threading import Thread
 
 class PID:
     _Kp: int
@@ -61,7 +62,7 @@ class PID:
                 respondTo(nextRPM)
 
     def _getError(self, currentValue: float) -> float:
-        return self._target - currentValue
+        return -self._target + currentValue
 
     def _getTime(self) -> int:
         return round(time.time() * 1000)
@@ -73,12 +74,25 @@ def adjust_throttle (s) :
     print(s)
     stri = str(s)
 
-    topic = "pid"
+    topic = "pid_throttle"
 
-   
-    publisher.send_string(topic, flags=zmq.SNDMORE)
-    publisher.send_string(stri)
-    
+    while(True):
+        publisher.send_string(topic, flags=zmq.SNDMORE)
+        publisher.send_string(stri)
+        time.sleep(0.01)
+
+def adjust_yaw (s):
+
+    print(s)
+
+    stri = str(s)
+    topic = "pid_yaw"
+
+    while(True):
+        publisher.send_string(topic, flags=zmq.SNDMORE)
+        publisher.send_string(stri)
+        time.sleep(0.01)
+
 
 
 if __name__ == '__main__':
@@ -89,8 +103,12 @@ if __name__ == '__main__':
     socket = context.socket(zmq.SUB)
     socket.connect("tcp://{}:{}".format(host, port))
     socket.subscribe("height")
-    expected_height = 1
-    pid = PID (expected_height, 2100, 900, 1500, 200, 0, 50)
+
+    expected_height = 1.5
+    expected_left_right = 0
+
+    pid = PID (expected_height, 2100, 900, 1500, 100000, 0, 1000000)
+    pid_yaw = PID(expected_left_right, 2100, 900, 1500, 100000, 0, 1000000)
 
     # print(current_height)
     ctx = zmq.Context.instance()
@@ -104,7 +122,17 @@ if __name__ == '__main__':
 
     time.sleep(0.5)
 
+    con = zmq.context()
+    sock = con.socket(zmq.SUB)
+    sock.connect("tcp://{}:{}".format(host, port))
+    sock.subscribe("left_right")
+    
+    Thread(target = pid_yaw.startPIDController, args = (sock.recv, adjust_yaw))
+
     pid.startPIDController(socket.recv, adjust_throttle)
+
+
+    
 
 
 
