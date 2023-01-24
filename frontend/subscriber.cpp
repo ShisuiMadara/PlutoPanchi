@@ -8,7 +8,7 @@ using namespace std;
 
 static int s_interrupted = 0;
 
-const string TOPIC = "height";
+const string TOPIC = "front";
 
 
 void startSubscriber()
