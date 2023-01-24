@@ -286,20 +286,36 @@ class req ():
         context = zmq.Context()
         socket = context.socket(zmq.SUB)
         socket.connect("tcp://{}:{}".format(host, port))
-        socket.subscribe("pid_height")
+        socket.subscribe("pid_throttle")
 
         socket.recv()
+
+        str = socket.recv().decode('utf-8')
+
+        print(str)
+
+        ar = str.split(" ")
+
+        ar.pop(len(ar)-1)
+        for i in range(0, len(ar)):
+            if ar[i] is None:
+                ar[i] = 1500
+            if(ar[i] == ''):
+                continue 
+            ar[i] = int(ar[i])
+
+
+      
+        print(ar)
         
-        self.throttle = int(socket.recv().decode('utf-8'))
+        for i in ar:
+            
+            print(type(i), end = " ")
+            print("")
 
-        
-        sock = zmq.Context().socket(zmq.SUB)
-        sock.connect("tcp://{}:{}".format(host, port))
-        sock.subscribe("pid_left_right")
-
-        sock.recv()
-
-        self.yaw = int(sock.recv().decode('utf-8'))
+        self.yaw = ar[0]
+        self.pitch = ar[1]
+        self.throttle = ar[2]
 
         arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]

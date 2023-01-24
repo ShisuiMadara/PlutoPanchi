@@ -37,6 +37,9 @@ def height(data):
             continue
 
         stri += str(data[i]) 
+
+        if(i == len(data)-1):
+            continue
         stri += " "
         #distance from LR, distance from FB, height
 
