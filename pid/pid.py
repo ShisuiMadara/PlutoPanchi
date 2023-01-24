@@ -122,14 +122,18 @@ if __name__ == '__main__':
 
     time.sleep(0.5)
 
-    con = zmq.context()
+    con = zmq.Context()
     sock = con.socket(zmq.SUB)
     sock.connect("tcp://{}:{}".format(host, port))
     sock.subscribe("left_right")
-    
-    Thread(target = pid_yaw.startPIDController, args = (sock.recv, adjust_yaw))
 
-    pid.startPIDController(socket.recv, adjust_throttle)
+    print("hi")
+    while(True):
+        print(socket.recv())
+    
+    # Thread(target = pid_yaw.startPIDController, args = (sock.recv, adjust_yaw))
+
+    # pid.startPIDController(socket.recv, adjust_throttle)
 
 
     

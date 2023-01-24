@@ -26,9 +26,20 @@ def publish(data):
 
 def height(data):
 
-    stri = str(data)
+    print(data)
+    stri = ""
 
     topic = "height"
+
+    for i in range (0,len(data)):
+        
+        if(data[i] == ',' or data[i] == '[' or data[i] == ']'):
+            continue
+
+        stri += str(data[i]) 
+        stri += " "
+        #distance from LR, distance from FB, height
+
 
     # print(stri)
     publisher.send_string(topic, flags=zmq.SNDMORE)
@@ -49,7 +60,8 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
     # print(h,w)
     cv2.circle(color_frame, (w//2, h//2), 7, (255, 255, 255), -1) 
 
-    distance_from_center = None
+    distance_from_center_LR = None
+    distance_from_center_FB = None
     head_back_to = [None, None]
 
     if draw:
@@ -65,25 +77,32 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
         y1 = (bbox[0][0][1][1] + bbox[0][0][3][1]) // 2
 
         center = ((x1 + x)// 2), int((y + y1)// 2)
-        distance_from_center = math.sqrt((center[0]- w//2)**2 + (center[1]- h//2)**2)
+        distance_from_center_LR = (center[0]- w//2) 
+        distance_from_center_FB = (center[1]- h//2)
+
         if (center[0] < w//2):
             head_back_to[0] = 'R'
+            
         else:
             head_back_to[0] = 'L'
+            distance_from_center_LR = -distance_from_center_LR
 
         if (center[1] < h//2):
             head_back_to[1] = 'B'
+            distance_from_center_FB = -distance_from_center_FB
         else:
             head_back_to[1] = 'F'    
                 
             
-        print(distance_from_center)
-        print(head_back_to)
+        # print(distance_from_center)
+        # print(head_back_to)
         # print(center, w//2, h//2)
     
     publish(center)
 
-    return center, distance_from_center, head_back_to
+    arr = [center, distance_from_center_LR, distance_from_center_FB]
+
+    return arr
 
 
 
@@ -110,10 +129,13 @@ if __name__ == '__main__':
         if center:
             cv2.circle(color_frame, (int(center[0]), int(center[1])), 6, (0, 0, 255))
             distance = depth_frame[int(center[1]), int(center[0])]
-            height(distance)  
 
             cv2.putText(color_frame, "{}mm".format(distance), (point[0], point[1] - 200), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
-            detectMarker(color_frame)
+            arr = detectMarker(color_frame)
+            arr.append(distance)
+            arr.pop(0)
+
+            height(arr)
 
         
         cv2.imshow("depth frame", depth_frame)
