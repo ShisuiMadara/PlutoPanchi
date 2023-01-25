@@ -296,10 +296,14 @@ class req ():
 
         ar = str.split(" ")
 
+        none_flag = 0
+
         ar.pop(len(ar)-1)
         for i in range(0, len(ar)):
             if ar[i] is None:
                 ar[i] = 1500
+            if ar[i] == 'None':
+                none_flag = 1
             if(ar[i] == ''):
                 continue 
             ar[i] = int(ar[i])
@@ -312,10 +316,12 @@ class req ():
             
             print(type(i), end = " ")
             print("")
+        
+        if none_flag == 0:
 
-        self.yaw = ar[0]
-        self.pitch = ar[1]
-        self.throttle = ar[2]
+            self.yaw = ar[0]
+            self.pitch = ar[1]
+            self.throttle = ar[2]
 
         arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
             self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
