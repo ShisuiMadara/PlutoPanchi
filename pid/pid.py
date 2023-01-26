@@ -115,10 +115,10 @@ if __name__ == '__main__':
     socket.connect("tcp://{}:{}".format(host, port))
     socket.subscribe("height")
 
-    expected_height = 1.5
+    expected_height = 0.5
     expected_left_right = 0
 
-    pid = PID ([0, 0, expected_height], 2100, 900, 1500, [450, 450, 500], [0, 0, 0], [700, 700, 10])
+    pid = PID ([0, 0, expected_height], 2100, 900, 1500, [450, 450, 500], [100, 100, 100], [650, 700, 120])
 
     # print(current_height)
     ctx = zmq.Context.instance()

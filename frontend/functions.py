@@ -333,7 +333,7 @@ class req ():
             arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
                 self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
             
-            time.sleep(0.01)
+            time.sleep(0.03)
             publish(arr)
     
     def mok(self):
