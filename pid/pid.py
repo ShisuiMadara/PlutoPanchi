@@ -33,6 +33,12 @@ class PID:
 
     def _getNextVal(self, currentDistance: float, idx: int) -> int:
         currentTime: int = self._getTime()
+        label : str = 'Left-Right'
+        if idx == 1:
+            label = 'Forward-Back'
+        elif idx == 2:
+            label = 'Height'
+        print(f'for {label}')
         print(f'Distance {currentDistance}')
         timeInterval: int = currentTime - self._prevTime
         print(f'Time Interval: {timeInterval}, {currentTime}, {self._prevTime}')
@@ -43,6 +49,7 @@ class PID:
         PID_Val: int = round(self._bias + P_Val + I_Val + D_Val)
         print("Value is {}".format(PID_Val))
         print("Error is {}".format(currentError))
+        print("PID Output is {}".format(PID_Val))
         # return output of PID
         return min(max(PID_Val, self._lowerBound), self._upperBound)
 
@@ -83,7 +90,6 @@ class PID:
 publisher = None
 def adjust (s) :
     print(s)
-
     stri = ""
 
     for i in range (0,len(s)):
@@ -93,12 +99,10 @@ def adjust (s) :
         
         stri += str(s[i])
         stri += " "
-
     topic = "pid_throttle"
-    while(True):
-        publisher.send_string(topic, flags=zmq.SNDMORE)
-        publisher.send_string(stri)
-        time.sleep(0.01)
+    publisher.send_string(topic, flags=zmq.SNDMORE)
+    publisher.send_string(stri)
+ 
 
 
 
@@ -114,7 +118,7 @@ if __name__ == '__main__':
     expected_height = 1.5
     expected_left_right = 0
 
-    pid = PID ([expected_height, 0, 0], 2100, 900, 1500, [100000, 0, 0], [100000, 0, 0], [1000000, 0, 0])
+    pid = PID ([0, 0, expected_height], 2100, 900, 1500, [450, 450, 500], [0, 0, 0], [700, 700, 10])
 
     # print(current_height)
     ctx = zmq.Context.instance()

@@ -73,28 +73,48 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
     return_dict = {}
     if bbox:
 
-        x = (bbox[0][0][0][0] + bbox[0][0][2][0]) // 2
-        x1 = (bbox[0][0][1][0] + bbox[0][0][3][0]) // 2
+        x = (bbox[0][0][0][0] + bbox[0][0][2][0]) / 2
+        x1 = (bbox[0][0][1][0] + bbox[0][0][3][0]) / 2
         
-        y = (bbox[0][0][0][1] + bbox[0][0][2][1]) // 2
-        y1 = (bbox[0][0][1][1] + bbox[0][0][3][1]) // 2
+        y = (bbox[0][0][0][1] + bbox[0][0][2][1]) / 2
+        y1 = (bbox[0][0][1][1] + bbox[0][0][3][1]) / 2
+
+
+        # print(x,x1,y,y1)
 
         center = ((x1 + x)// 2), int((y + y1)// 2)
-        distance_from_center_LR = (center[0]- w//2) 
-        distance_from_center_FB = (center[1]- h//2)
+        # print("-----bbox---------")
+        # print(center)
+        # print(aruco_center)
+        # print("-----------------")
 
-        if (center[0] < w//2):
+        distance_from_center_LR = abs(center[0]- w/2) 
+        distance_from_center_FB = abs(center[1]- h/2)
+
+        # print("---------------")
+        # print(distance_from_center_FB)
+        # print(distance_from_center_LR)
+        # print("---------------")
+
+        if (center[0] < w/2):
             head_back_to[0] = 'R'
             
         else:
             head_back_to[0] = 'L'
             distance_from_center_LR = -distance_from_center_LR
 
-        if (center[1] < h//2):
+        if (center[1] < h/2):
             head_back_to[1] = 'B'
             distance_from_center_FB = -distance_from_center_FB
         else:
             head_back_to[1] = 'F'    
+        
+        # print("-----------------")
+        # print(head_back_to)
+        # print("------------------")
+        # print("-----------center------------")
+        # print(center)
+        # print("---------aaaaaaaaaaaaaaa------------")
             
         # print(distance_from_center)
         # print(head_back_to)
@@ -103,6 +123,7 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
         publish(center)
 
     arr = [center, distance_from_center_LR, distance_from_center_FB]
+    # print(arr)
 
     return arr
 
@@ -124,20 +145,35 @@ if __name__ == '__main__':
     while True:
         ret, depth_frame, color_frame = dc.get_frame()
 
+     
+
         center = detectMarker(color_frame)[0]
+        # print(center)
         # Show distance for a specific point
         # print(point, center)
 
         if center:
+            # print("here")
+            # print(center)
             cv2.circle(color_frame, (int(center[0]), int(center[1])), 6, (0, 0, 255))
             distance = depth_frame[int(center[1]), int(center[0])]
 
             cv2.putText(color_frame, "{}mm".format(distance), (point[0], point[1] - 200), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
             arr = detectMarker(color_frame)
-            arr.append(distance)
-            arr.pop(0)
 
-            height(arr)
+            if(arr[1] == None or arr[2] == None):
+                pass 
+            else:
+                arr.append(distance)
+                arr.pop(0)
+
+                print(arr)
+                height(arr)
+                tup = center
+
+            # print("UPDATED TUPLE")
+            # print(tup)
+            # print("------------------")
 
         
         cv2.imshow("depth frame", depth_frame)

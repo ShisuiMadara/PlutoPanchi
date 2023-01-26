@@ -288,46 +288,53 @@ class req ():
         socket.connect("tcp://{}:{}".format(host, port))
         socket.subscribe("pid_throttle")
 
-        socket.recv()
+        while(True):
+            socket.recv()
 
-        st = socket.recv().decode('utf-8')
+            st = socket.recv().decode('utf-8')
 
-        print(st)
+            print(st)
 
-        ar = st.split(" ")
+            ar = st.split(" ")
 
-        none_flag = 0
+            none_flag = 0
 
-        ar.pop(len(ar)-1)
-        for i in range(0, len(ar)):
-            if ar[i] is None:
-                ar[i] = 1500
-            if ar[i] == 'None':
-                none_flag = 1
-            if(ar[i] == ''):
-                continue 
-            ar[i] = int(ar[i])
+            ar.pop(len(ar)-1)
+            for i in range(0, len(ar)):
+                if ar[i] is None:
+                    ar[i] = 1500
+                if ar[i] == 'None':
+                    none_flag = 1
+                if(ar[i] == ''):
+                    continue 
+                ar[i] = int(ar[i])
 
 
-      
-        print(ar)
         
-        # for i in ar:
+            print(ar)
             
-        #     print(type(i), end = " ")
-        #     print("")
-        
-        if none_flag == 0:
+            # for i in ar:
+                
+            #     print(type(i), end = " ")
+            #     print("")
+            
+            if none_flag == 0:
 
-            self.yaw = ar[0]
-            self.pitch = ar[1]
-            self.throttle = ar[2]
+                self.roll = ar[0]
+                self.pitch = ar[1]
+                self.throttle = ar[2]
 
-        arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
-            self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
-        
-        time.sleep(0.01)
-        publish(arr)
+                print("--------------------------")
+                print(self.yaw)
+                print(self.pitch)
+                print(self.throttle)
+                print("---------------------------")
+
+            arr = [str(self.roll), str(self.pitch), str(self.throttle), str(self.yaw), str(
+                self.head_free), str(self.dev_mode), str(self.alt_hold), str(self.is_armed)]
+            
+            time.sleep(0.01)
+            publish(arr)
     
     def mok(self):
         print("hoi")
