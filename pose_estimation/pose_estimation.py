@@ -95,13 +95,12 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
             distance_from_center_FB = -distance_from_center_FB
         else:
             head_back_to[1] = 'F'    
-                
             
         # print(distance_from_center)
         # print(head_back_to)
         # print(center, w//2, h//2)
     
-    publish(center)
+        publish(center)
 
     arr = [center, distance_from_center_LR, distance_from_center_FB]
 

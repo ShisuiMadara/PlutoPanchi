@@ -290,11 +290,11 @@ class req ():
 
         socket.recv()
 
-        str = socket.recv().decode('utf-8')
+        st = socket.recv().decode('utf-8')
 
-        print(str)
+        print(st)
 
-        ar = str.split(" ")
+        ar = st.split(" ")
 
         none_flag = 0
 
@@ -312,10 +312,10 @@ class req ():
       
         print(ar)
         
-        for i in ar:
+        # for i in ar:
             
-            print(type(i), end = " ")
-            print("")
+        #     print(type(i), end = " ")
+        #     print("")
         
         if none_flag == 0:
 

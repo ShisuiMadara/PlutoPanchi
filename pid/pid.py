@@ -66,6 +66,7 @@ class PID:
                         recvData[i] = 1500
 
                 recievedData = [float(i)/1000 for i in recvData]
+                print(recievedData)
                 RPMS = []
                 for i in [0, 1, 2]:
                     RPMS.append(self._getNextVal(recievedData[i], i))
