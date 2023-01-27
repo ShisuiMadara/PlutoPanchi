@@ -1,4 +1,5 @@
 import zmq
+from pid import PID
 from zmq.devices import monitored_queue
 from threading import Thread
 import time
@@ -463,59 +464,26 @@ class req:
         ]
         publish(arr)
 
-    def recieve_pid(self):
-        host = "127.0.0.1"
-        port = "6002"
-        context = zmq.Context()
-        socket = context.socket(zmq.SUB)
-        socket.connect("tcp://{}:{}".format(host, port))
-        socket.subscribe("pid_throttle")
-
-        while True:
-            socket.recv()
-
-            st = socket.recv().decode("utf-8")
-
-            print(st)
-
-            ar = st.split(" ")
-
-            none_flag = 0
-
-            ar.pop(len(ar) - 1)
-            for i in range(0, len(ar)):
-                if ar[i] is None:
-                    ar[i] = 1500
-                if ar[i] == "None":
-                    none_flag = 1
-                if ar[i] == "":
-                    continue
-                ar[i] = int(ar[i])
-            print(ar)
-            if none_flag == 0:
-                self.roll = ar[0]
-                self.pitch = ar[1]
-                self.throttle = ar[2]
-
-                print("--------------------------\n\r")
-                print(f"{self.yaw}\n\r")
-                print(f"{self.pitch}\n\r")
-                print(f"{self.throttle}\n\r")
-                print("---------------------------\n\r")
-
-            arr = [
-                str(self.roll),
-                str(self.pitch),
-                str(self.throttle),
-                str(self.yaw),
-                str(self.head_free),
-                str(self.dev_mode),
-                str(self.alt_hold),
-                str(self.is_armed),
-            ]
-
-            time.sleep(0.03)
-            publish(arr)
+    def recieve_pid(self, pid_output):
+        self.roll = pid_output[0]
+        self.pitch = pid_output[1]
+        self.throttle = pid_output[2]
+        print("--------------------------\n\r")
+        print(f"{self.yaw}\n\r")
+        print(f"{self.pitch}\n\r")
+        print(f"{self.throttle}\n\r")
+        print("---------------------------\n\r")
+        arr = [
+            str(self.roll),
+            str(self.pitch),
+            str(self.throttle),
+            str(self.yaw),
+            str(self.head_free),
+            str(self.dev_mode),
+            str(self.alt_hold),
+            str(self.is_armed),
+        ]
+        publish(arr)
 
     def mok(self):
         print("hoi\n\r")
@@ -524,27 +492,24 @@ class req:
 if __name__ == "__main__":
 
     ctx = zmq.Context.instance()
-
-    # data = [1500,1500,1500,1500,True,True,True,False]
-
-    # cmd_type = 0
-
     publisher = ctx.socket(zmq.XPUB)
     publisher.bind("tcp://127.0.0.1:6000")
-
     time.sleep(0.5)
-
     stdscr = curses.initscr()
-
     stdscr.keypad(1)
-
     stdscr.addstr("Hit 'q' to quit\n\r")
     stdscr.refresh()
-
     key = ""
+    # setup PID
+    host = "127.0.0.1"
+    port = "6001"
+    socket = zmq.Context().socket(zmq.SUB)
+    socket.connect(f"tcp://{host}:{port}")
+    socket.subscribe("height")
+    targets = [0, 0, 0.5]   # left-right, front-back, height
+    pidController = PID (targets, 2100, 900, 1500, [450, 450, 500], [100, 100, 100], [650, 700, 120])
     test = req(1500, 1500, 1500, 1500, True, True, True, False, 0)
-
-    Thread(target=test.recieve_pid).start()
+    Thread(target=pidController.startPIDController, args = (socket.recv, test.recieve_pid)).start()
     # Thread(target = test.mok()).start()
 
     while key != ord("q"):
