@@ -1,11 +1,12 @@
 import time
-import zmq 
+import zmq
 from threading import Thread
 
 class PID:
-    _Kp: list
-    _Ki: list
-    _Kd: list
+    Kp: list
+    Ki: list
+    Kd: list
+    PID_Enabled : bool
     _prevTime : int
     _prevDistance : float
     _target: list
@@ -23,6 +24,7 @@ class PID:
         integralConst: list,
         deferentialConst: list,
     ) -> None:
+        self.PID_Enabled = True
         self._Kp = proportionalConst
         self._Ki = integralConst
         self._Kd = deferentialConst
@@ -58,11 +60,10 @@ class PID:
         dataFetcher,
         respondTo
     ) -> None:
-        PID_Enabled : bool = True
         self._prevTime = self._getTime()
         while 1:
             time.sleep(0.001)
-            if PID_Enabled:
+            if self.PID_Enabled:
                 dataFetcher()
                 recvData = dataFetcher().decode('utf-8').split()
 
@@ -95,14 +96,14 @@ def adjust (s) :
     for i in range (0,len(s)):
 
         if(s[i] == ',' or s[i] == ']' or s[i] == '['):
-            continue 
-        
+            continue
+
         stri += str(s[i])
         stri += " "
     topic = "pid_throttle"
     publisher.send_string(topic, flags=zmq.SNDMORE)
     publisher.send_string(stri)
- 
+
 
 
 
@@ -134,15 +135,15 @@ if __name__ == '__main__':
     # sock = con.socket(zmq.SUB)
     # sock.connect("tcp://{}:{}".format(host, port))
     # sock.subscribe("left_right")
-    
+
     # Thread(target = pid_yaw.startPIDController, args = (sock.recv, adjust_yaw))
 
     pid.startPIDController(socket.recv, adjust)
 
 
-    
 
 
 
 
-    
+
+
