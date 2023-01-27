@@ -1,0 +1,527 @@
+[?1049h[22;0;0t[1;15r(B[m[4l[?7h[?1h=[H[2JHit 'q' to quit
+12for Left-Right
+
+Distance -0.07
+
+Time Interval: 13, 1674820177116, 1674820177103
+
+Value is 1451 
+
+Error is -0.07 
+
+PID Output is 1451 
+
+for Forward-Back
+
+Distance 0.035
+
+Time Interval: 13, 1674820177116, 1674820177103
+
+Value is 1525 
+
+Error is 0.035 
+
+PID Output is 1525 
+
+for Height
+
+Distance 1.343
+
+Time Interval: 13, 1674820177116, 1674820177103
+
+Value is 1564 
+
+Error is 0.843 
+
+PID Output is 1564 
+
+[1451, 1525, 1564]
+
+Publish data: ['1451', '1525', '1564', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.071
+
+Time Interval: 99, 1674820177215, 1674820177116
+
+Value is 1145 
+
+Error is -0.071 
+
+PID Output is 1145 
+
+for Forward-Back
+
+Distance 0.035
+
+Time Interval: 99, 1674820177215, 1674820177116
+
+Value is 1675 
+
+Error is 0.035 
+
+PID Output is 1675 
+
+for Height
+
+Distance 1.343
+
+Time Interval: 99, 1674820177215, 1674820177116
+
+Value is 1926 
+
+Error is 0.843 
+
+PID Output is 1926 
+
+[1145, 1675, 1926]
+
+Publish data: ['1145', '1675', '1926', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.069
+
+Time Interval: 712, 1674820177927, 1674820177215
+
+Value is -960 
+
+Error is -0.069 
+
+PID Output is -960 
+
+for Forward-Back
+
+Distance 0.035
+
+Time Interval: 712, 1674820177927, 1674820177215
+
+Value is 2748 
+
+Error is 0.035 
+
+PID Output is 2748 
+
+for Height
+
+Distance 1.346
+
+Time Interval: 712, 1674820177927, 1674820177215
+
+Value is 4520 
+
+Error is 0.8460000000000001 
+
+PID Output is 4520 
+
+[900, 2100, 2100]
+
+Publish data: ['900', '2100', '2100', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.068
+
+Time Interval: 109, 1674820178036, 1674820177927
+
+Value is 1126 
+
+Error is -0.068 
+
+PID Output is 1126 
+
+for Forward-Back
+
+Distance 0.035
+
+Time Interval: 109, 1674820178036, 1674820177927
+
+Value is 1693 
+
+Error is 0.035 
+
+PID Output is 1693 
+
+for Height
+
+Distance 1.349
+
+Time Interval: 109, 1674820178036, 1674820177927
+
+Value is 1971 
+
+Error is 0.849 
+
+PID Output is 1971 
+
+[1126, 1693, 1971]
+
+Publish data: ['1126', '1693', '1971', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.066
+
+Time Interval: 417, 1674820178453, 1674820178036
+
+Value is 121 
+
+Error is -0.066 
+
+PID Output is 121 
+
+for Forward-Back
+
+Distance 0.038
+
+Time Interval: 417, 1674820178453, 1674820178036
+
+Value is 2294 
+
+Error is 0.038 
+
+PID Output is 2294 
+
+for Height
+
+Distance 1.349
+
+Time Interval: 417, 1674820178453, 1674820178036
+
+Value is 3279 
+
+Error is 0.849 
+
+PID Output is 3279 
+
+[900, 2100, 2100]
+
+Publish data: ['900', '2100', '2100', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.066
+
+Time Interval: 19, 1674820178472, 1674820178453
+
+Value is 1434 
+
+Error is -0.066 
+
+PID Output is 1434 
+
+for Forward-Back
+
+Distance 0.038
+
+Time Interval: 19, 1674820178472, 1674820178453
+
+Value is 1538 
+
+Error is 0.038 
+
+PID Output is 1538 
+
+for Height
+
+Distance 1.349
+
+Time Interval: 19, 1674820178472, 1674820178453
+
+Value is 1589 
+
+Error is 0.849 
+
+PID Output is 1589 
+
+[1434, 1538, 1589]
+
+Publish data: ['1434', '1538', '1589', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.066
+
+Time Interval: 109, 1674820178581, 1674820178472
+
+Value is 1137 
+
+Error is -0.066 
+
+PID Output is 1137 
+
+for Forward-Back
+
+Distance 0.038
+
+Time Interval: 110, 1674820178582, 1674820178472
+
+Value is 1711 
+
+Error is 0.038 
+
+PID Output is 1711 
+
+for Height
+
+Distance 1.349
+
+Time Interval: 110, 1674820178582, 1674820178472
+
+Value is 1975 
+
+Error is 0.849 
+
+PID Output is 1975 
+
+[1137, 1711, 1975]
+
+Publish data: ['1137', '1711', '1975', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.065
+
+Time Interval: 145, 1674820178727, 1674820178582
+
+Value is 1025 
+
+Error is -0.065 
+
+PID Output is 1025 
+
+for Forward-Back
+
+Distance 0.038
+
+Time Interval: 145, 1674820178727, 1674820178582
+
+Value is 1777 
+
+Error is 0.038 
+
+PID Output is 1777 
+
+for Height
+
+Distance 1.346
+
+Time Interval: 145, 1674820178727, 1674820178582
+
+Value is 2122 
+
+Error is 0.8460000000000001 
+
+PID Output is 2122 
+
+[1025, 1777, 2100]
+
+Publish data: ['1025', '1777', '2100', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.065
+
+Time Interval: 36, 1674820178763, 1674820178727
+
+Value is 1380 
+
+Error is -0.065 
+
+PID Output is 1380 
+
+for Forward-Back
+
+Distance 0.037
+
+Time Interval: 36, 1674820178763, 1674820178727
+
+Value is 1569 
+
+Error is 0.037 
+
+PID Output is 1569 
+
+for Height
+
+Distance 1.343
+
+Time Interval: 36, 1674820178763, 1674820178727
+
+Value is 1660 
+
+Error is 0.843 
+
+PID Output is 1660 
+
+[1380, 1569, 1660]
+
+Publish data: ['1380', '1569', '1660', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.064
+
+Time Interval: 205, 1674820178968, 1674820178763
+
+Value is 841 
+
+Error is -0.064 
+
+PID Output is 841 
+
+for Forward-Back
+
+Distance 0.038
+
+Time Interval: 205, 1674820178968, 1674820178763
+
+Value is 1891 
+
+Error is 0.038 
+
+PID Output is 1891 
+
+for Height
+
+Distance 1.343
+
+Time Interval: 205, 1674820178968, 1674820178763
+
+Value is 2373 
+
+Error is 0.843 
+
+PID Output is 2373 
+
+[900, 1891, 2100]
+
+Publish data: ['900', '1891', '2100', '1500', 'True', 'True', 'True', 'False']
+
+for Left-Right
+
+Distance -0.064
+
+Time Interval: 225, 1674820179193, 1674820178968
+
+Value is 777 
+
+Error is -0.064 
+
+PID Output is 777 
+
+for Forward-Back
+
+Distance 0.038
+
+Time Interval: 225, 1674820179193, 1674820178968
+
+Value is 1929 
+
+Error is 0.038 
+
+PID Output is 1929 
+
+for Height
+
+Distance 1.349
+
+Time Interval: 225, 1674820179193, 1674820178968
+
+Value is 2464 
+
+Error is 0.849 
+
+PID Output is 2464 
+
+[900, 1929, 2100]
+
+Publish data: ['900', '1929', '2100', '1500', 'True', 'True', 'True', 'False']
+
+ARM IS CALLED
+
+Zooommm
+
+for Left-Right
+
+Distance -0.062
+
+Time Interval: 776, 1674820179969, 1674820179193
+
+Value is -909 
+
+Error is -0.062 
+
+PID Output is -909 
+
+for Forward-Back
+
+Distance 0.037
+
+Time Interval: 776, 1674820179969, 1674820179193
+
+Value is 2937 
+
+Error is 0.037 
+
+PID Output is 2937 
+
+for Height
+
+Distance 1.346
+
+Time Interval: 776, 1674820179969, 1674820179193
+
+Value is 4791 
+
+Error is 0.8460000000000001 
+
+PID Output is 4791 
+
+[900, 2100, 2100]
+
+Publish data: ['900', '2100', '2100', '1500', 'True', 'True', 'True', 'True']
+
+for Left-Right
+
+Distance -0.06
+
+Time Interval: 145, 1674820180114, 1674820179969
+
+Value is 1062 
+
+Error is -0.06 
+
+PID Output is 1062 
+
+for Forward-Back
+
+Distance 0.037
+
+Time Interval: 145, 1674820180114, 1674820179969
+
+Value is 1770 
+
+Error is 0.037 
+
+PID Output is 1770 
+
+for Height
+
+Distance 1.349
+
+Time Interval: 145, 1674820180114, 1674820179969
+
+Value is 2124 
+
+Error is 0.849 
+
+PID Output is 2124 
+
+[1062, 1770, 2100]
+
+Publish data: ['1062', '1770', '2100', '1500', 'True', 'True', 'True', 'True']
+
+Landing safely....
+

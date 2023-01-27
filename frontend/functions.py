@@ -468,11 +468,6 @@ class req:
         self.roll = pid_output[0]
         self.pitch = pid_output[1]
         self.throttle = pid_output[2]
-        print("--------------------------\n\r")
-        print(f"{self.yaw}\n\r")
-        print(f"{self.pitch}\n\r")
-        print(f"{self.throttle}\n\r")
-        print("---------------------------\n\r")
         arr = [
             str(self.roll),
             str(self.pitch),
@@ -483,6 +478,7 @@ class req:
             str(self.alt_hold),
             str(self.is_armed),
         ]
+        print(f'Publish data: {arr}\n\r')
         publish(arr)
 
     def mok(self):
@@ -507,7 +503,7 @@ if __name__ == "__main__":
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
     targets = [0, 0, 0.5]   # left-right, front-back, height
-    pidController = PID (targets, 2100, 900, 1500, [450, 450, 500], [100, 100, 100], [650, 700, 120])
+    pidController = PID (targets, 2100, 900, 1500, [2, 2, 300], [0, 0, 5], [1, 1, 10])
     test = req(1500, 1500, 1500, 1500, True, True, True, False, 0)
     Thread(target=pidController.startPIDController, args = (socket.recv, test.recieve_pid)).start()
     # Thread(target = test.mok()).start()

@@ -1,6 +1,4 @@
 import time
-import zmq
-from threading import Thread
 
 class PID:
     _Kp: list
@@ -40,18 +38,18 @@ class PID:
             label = 'Forward-Back'
         elif idx == 2:
             label = 'Height'
-        print(f'for {label}')
-        print(f'Distance {currentDistance}')
-        timeInterval: int = currentTime - self._prevTime
-        print(f'Time Interval: {timeInterval}, {currentTime}, {self._prevTime}')
+        print(f'for {label}\n\r')
+        print(f'Distance {currentDistance}\n\r')
+        timeInterval: int = min(currentTime - self._prevTime, 5)
+        print(f'Time Interval: {timeInterval}, {currentTime}, {self._prevTime}\n\r')
         currentError: float = self._getError(currentDistance, idx)
         D_Val: float = (self._Kd[idx] * currentError) / timeInterval
         P_Val: float = self._Kp[idx] * currentError
         I_Val: float = self._Ki[idx] * currentError * timeInterval
         PID_Val: int = round(self._bias + P_Val + I_Val + D_Val)
-        print("Value is {}".format(PID_Val))
-        print("Error is {}".format(currentError))
-        print("PID Output is {}".format(PID_Val))
+        print("Value is {} \n\r".format(PID_Val))
+        print("Error is {} \n\r".format(currentError))
+        print("PID Output is {} \n\r".format(PID_Val))
         # return output of PID
         return min(max(PID_Val, self._lowerBound), self._upperBound)
 
@@ -74,19 +72,18 @@ class PID:
                         recvData[i] = 1500
 
                 recievedData = [float(i)/1000 for i in recvData]
-                print(recievedData)
                 RPMS = []
                 for i in [0, 1, 2]:
                     RPMS.append(self._getNextVal(recievedData[i], i))
                 self._prevTime = self._getTime()
+                print(f'{RPMS}\n\r')
                 respondTo(RPMS)
 
     def _getError(self, currentValue: float, idx: int) -> float:
-        return -self._target[idx] + currentValue
+        return -self.target[idx] + currentValue
 
     def _getTime(self) -> int:
         return round(time.time() * 1000)
-
 
 
 
