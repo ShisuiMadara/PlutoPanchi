@@ -143,6 +143,7 @@ if __name__ == '__main__':
     
 
     while True:
+        time.sleep(0.01)
         ret, depth_frame, color_frame = dc.get_frame()
 
      
