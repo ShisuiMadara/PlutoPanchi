@@ -72,6 +72,7 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
 
     return_dict = {}
     if bbox:
+        # print(bbox)
 
         x = (bbox[0][0][0][0] + bbox[0][0][2][0]) / 2
         x1 = (bbox[0][0][1][0] + bbox[0][0][3][0]) / 2
@@ -124,7 +125,6 @@ def detectMarker(img, markerSize=4, totalMarker=50, draw=True):
 
     arr = [center, distance_from_center_LR, distance_from_center_FB]
     # print(arr)
-
     return arr
 
 
@@ -145,29 +145,25 @@ if __name__ == '__main__':
     while True:
         time.sleep(0.01)
         ret, depth_frame, color_frame = dc.get_frame()
-
-     
-
-        center = detectMarker(color_frame)[0]
+        center = detectMarker(color_frame)
         # print(center)
         # Show distance for a specific point
         # print(point, center)
-
-        if center:
+        if center[0]:
             # print("here")
             # print(center)
-            cv2.circle(color_frame, (int(center[0]), int(center[1])), 6, (0, 0, 255))
-            distance = depth_frame[int(center[1]), int(center[0])]
+            cv2.circle(color_frame, (int(center[0][0]), int(center[0][1])), 6, (0, 0, 255))
+            distance = depth_frame[int(center[0][1]), int(center[0][0])]
 
             cv2.putText(color_frame, "{}mm".format(distance), (point[0], point[1] - 200), cv2.FONT_HERSHEY_PLAIN, 2, (0, 0, 255), 2)
-            arr = detectMarker(color_frame)
-
+            arr = center
+            # print(arr)
             if(arr[1] == None or arr[2] == None):
                 pass 
             else:
                 arr.append(distance)
                 arr.pop(0)
-
+                # print("hello")
                 print(arr)
                 height(arr)
                 tup = center

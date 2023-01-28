@@ -502,9 +502,9 @@ if __name__ == "__main__":
     socket = zmq.Context().socket(zmq.SUB)
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
-    targets = [0, 0, 0.5]   # left-right, front-back, height
-    pidController = PID (targets, 2100, 900, 1500, [2, 2, 300], [0, 0, 5], [1, 1, 10])
-    test = req(1500, 1500, 1500, 1500, True, True, True, False, 0)
+    targets = [0, 0, 3]   # left-right, front-back, height
+    pidController = PID (targets, 1550, 1450, [1500, 1500, 1500], [1000, 1, 100], [0.1, 0.1, 0.5], [0.1, 0.1, 0.5])
+    test = req(1505, 1500, 1500, 1500, True, True, True, False, 0)
     Thread(target=pidController.startPIDController, args = (socket.recv, test.recieve_pid)).start()
     # Thread(target = test.mok()).start()
 

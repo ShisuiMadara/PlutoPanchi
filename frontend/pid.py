@@ -10,14 +10,14 @@ class PID:
     target: list
     _lowerBound: int
     _upperBound: int
-    _bias: int
+    _bias: list
 
     def __init__(
         self,
         target: list,
         upper: int,
         lower: int,
-        bias: int,
+        bias: list,
         proportionalConst: list,
         integralConst: list,
         deferentialConst: list,
@@ -40,13 +40,13 @@ class PID:
             label = 'Height'
         print(f'for {label}\n\r')
         print(f'Distance {currentDistance}\n\r')
-        timeInterval: int = min(currentTime - self._prevTime, 5)
+        timeInterval: int = min(currentTime - self._prevTime, 25)
         print(f'Time Interval: {timeInterval}, {currentTime}, {self._prevTime}\n\r')
         currentError: float = self._getError(currentDistance, idx)
         D_Val: float = (self._Kd[idx] * currentError) / timeInterval
         P_Val: float = self._Kp[idx] * currentError
         I_Val: float = self._Ki[idx] * currentError * timeInterval
-        PID_Val: int = round(self._bias + P_Val + I_Val + D_Val)
+        PID_Val: int = round(self._bias[idx] + P_Val + I_Val + D_Val)
         print("Value is {} \n\r".format(PID_Val))
         print("Error is {} \n\r".format(currentError))
         print("PID Output is {} \n\r".format(PID_Val))
@@ -58,12 +58,13 @@ class PID:
         dataFetcher,
         respondTo
     ) -> None:
-        self._prevTime = self._getTime()
         while 1:
+            self._prevTime = self._getTime()
             time.sleep(0.001)
             if self.PID_Enabled:
                 dataFetcher()
                 recvData = dataFetcher().decode('utf-8').split()
+                print(f'{recvData}\n\r')
 
                 for i in range(len(recvData)):
                     if recvData[i] is None:
@@ -75,7 +76,6 @@ class PID:
                 RPMS = []
                 for i in [0, 1, 2]:
                     RPMS.append(self._getNextVal(recievedData[i], i))
-                self._prevTime = self._getTime()
                 print(f'{RPMS}\n\r')
                 respondTo(RPMS)
 
