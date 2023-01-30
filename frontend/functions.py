@@ -66,14 +66,14 @@ class req:
         command_type,
     ):
 
-        self.roll = 1500
-        self.pitch = 1500
-        self.yaw = 1500
-        self.throttle = 1500
-        self.head_free = True
-        self.dev_mode = True
-        self.alt_hold = True
-        self.is_armed = False
+        self.roll = roll
+        self.pitch = pitch
+        self.yaw = yaw
+        self.throttle = throttle
+        self.head_free = head_free
+        self.dev_mode = dev_mode
+        self.alt_hold = alt_hold
+        self.is_armed = is_armed
 
     def arm(self):
 
@@ -295,6 +295,7 @@ class req:
             str(self.alt_hold),
             str(self.is_armed),
         ]
+        print(f'{arr}\n\r')
         publish(arr)
         cmd_publisher(self.command_type)
 
@@ -485,6 +486,10 @@ class req:
         print("hoi\n\r")
 
 
+def t(send):
+    while 1:
+        send([1500, 1500, 1500])
+
 if __name__ == "__main__":
 
     ctx = zmq.Context.instance()
@@ -502,23 +507,21 @@ if __name__ == "__main__":
     socket = zmq.Context().socket(zmq.SUB)
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
-    targets = [0, 0, 0.6]   # left-right, front-back, height
-    InitialThrottle = 1500
-    InitialRoll = 1540
-    InitialPitch = 1490
-    pidController = PID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [0, 0, 0], [0, 0, 0], [0, 0, 0])
-    test = req(InitialRoll, InitialPitch, 1500, InitialThrottle, True, True, False, False, 0)
-    Thread(target=pidController.startPIDController, args = (socket.recv, test.recieve_pid)).start()
+    targets = [0, 0, 0.1]   # left-right, front-back, height
+    InitialThrottle = 2100
+    InitialRoll = 2100
+    InitialPitch = 1500
+    # pidController = PID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [25, 25, 400], [0, 0, 10], [5, 5, 5])
+    # pidController = PID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [0, 0, 0], [0, 0, 0], [0, 0, 0])
+    test = req(1500, 1500, 1500, 1500, True, True, False, False, 0)
+    # Thread(target=pidController.startPIDController, args = (socket.recv, )).start()
     # Thread(target = test.mok()).start()
-
     while key != ord("q"):
         key = stdscr.getch()
 
         if key == 49:
             test.take_off()
             print("Zooommm\n\r")
-            # Thread(target = test.recieve_pid()).start()
-            # Thread(target = test.recieve_pid()).start()
         elif key == 50:
             test.land()
             print("Landing safely....\n\r")
