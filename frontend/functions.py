@@ -1,5 +1,6 @@
 import zmq
 from pid import PID
+from sqaurePID import PID as sqPID
 from zmq.devices import monitored_queue
 from threading import Thread
 import time
@@ -486,12 +487,7 @@ class req:
         print("hoi\n\r")
 
 
-def t(send):
-    while 1:
-        send([1500, 1500, 1500])
-
 if __name__ == "__main__":
-
     ctx = zmq.Context.instance()
     publisher = ctx.socket(zmq.XPUB)
     publisher.bind("tcp://127.0.0.1:6000")
@@ -507,19 +503,22 @@ if __name__ == "__main__":
     socket = zmq.Context().socket(zmq.SUB)
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
-    targets = [0, 0, 0.4]   # left-right, front-back, height
+    currentTarget = 0
+    targetHeight = 1.8
+    targets = [[0, 0, targetHeight], [0.2, -0.2, targetHeight], [-0.2, -0.2, targetHeight], [-0.2, 0.2, targetHeight], [0.2, 0.2, targetHeight]]   # left-right, front-back, height
     InitialThrottle = 1500
-    InitialRoll = 1500
+    InitialRoll = 1479
     InitialPitch = 1500
-    pidController = PID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [300, 300, 400], [10, 10, 10], [15, 15, 15])
+    # pidController = PID (targets[0], 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [300, 300, 500], [10, 10, 20], [15, 15, 10])
+    pidController = sqPID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [60, 120, 500], [30, 30, 20], [5, 5, 10], 0.05)
     # pidController = PID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [0, 0, 0], [0, 0, 0], [0, 0, 0])
-    test = req(1500, 1500, 1500, 1500, True, True, False, False, 0)
+    test = req(InitialRoll, InitialPitch, 1500, InitialThrottle, True, True, False, False, 0)
     Thread(target=pidController.startPIDController, args = (socket.recv, test.recieve_pid)).start()
     # Thread(target=pidController.startPIDController, args = (socket.recv, )).start()
     # Thread(target = test.mok()).start()
     while key != ord("q"):
         key = stdscr.getch()
-
+        print(key)
         if key == 49:
             test.take_off()
             print("Zooommm\n\r")
@@ -539,7 +538,6 @@ if __name__ == "__main__":
         elif key == 54:
             test.left_flip
             print("LEFT FLIPP!!\n\r")
-
         elif key == 119:
             test.forward()
             print("Going forward...\n\r")
@@ -557,7 +555,6 @@ if __name__ == "__main__":
             print("Going right\n\r")
             # test.recieve_pid()
         elif key == 32:
-
             if test.is_armed:
                 test.land()
                 print("Landing safely to disarm\n\r")
@@ -566,7 +563,6 @@ if __name__ == "__main__":
             else:
                 test.arm()
                 print("Arming !!\n\r")
-
         elif key == curses.KEY_UP:
             test.increase_height()
             print("increasing height...\n\r")
