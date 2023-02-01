@@ -504,13 +504,13 @@ if __name__ == "__main__":
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
     currentTarget = 0
-    targetHeight = 1.8
-    targets = [[0, 0, targetHeight], [0.2, -0.2, targetHeight], [-0.2, -0.2, targetHeight], [-0.2, 0.2, targetHeight], [0.2, 0.2, targetHeight]]   # left-right, front-back, height
-    InitialThrottle = 1500
-    InitialRoll = 1479
-    InitialPitch = 1500
+    targetHeight = 1.4
+    targets = [[0, 0, targetHeight], [-0.177, -0.141, targetHeight], [0.167, -0.136, targetHeight], [0.156, 0.099, targetHeight], [-0.095, 0.093, targetHeight], [-0.177, -0.141, targetHeight]]   # left-right, front-back, height
+    InitialThrottle = 1460
+    InitialRoll = 1483
+    InitialPitch = 1501
     # pidController = PID (targets[0], 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [300, 300, 500], [10, 10, 20], [15, 15, 10])
-    pidController = sqPID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [60, 120, 500], [30, 30, 20], [5, 5, 10], 0.05)
+    pidController = sqPID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [2, 2, 0], [1, 1, 0], [2, 2, 0], 0.07)
     # pidController = PID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [0, 0, 0], [0, 0, 0], [0, 0, 0])
     test = req(InitialRoll, InitialPitch, 1500, InitialThrottle, True, True, False, False, 0)
     Thread(target=pidController.startPIDController, args = (socket.recv, test.recieve_pid)).start()

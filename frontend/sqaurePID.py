@@ -55,6 +55,8 @@ class PID:
         print("Error is {} \n\r".format(currentError))
         print("PID Output is {} \n\r".format(PID_Val))
         # return output of PID
+        if self._Kp[idx] == 0 and self._Ki[idx] == 0 and self._Kd[idx] == 0:
+            currentError = 0
         return min(max(PID_Val, self._lowerBound), self._upperBound), currentError
 
     def startPIDController(
@@ -88,6 +90,7 @@ class PID:
                                 Flag = False
                     if Flag and self._currentTargetIndex < len(self.targets):
                         self._currentTargetIndex += 1
+                        RPMS = self._bias
                     elif Flag and self._currentTargetIndex == len(self.targets):
                         RPMS = [900, 900, 900]
                     print(f'{RPMS} {self._currentTargetIndex}\n\r')
