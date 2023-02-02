@@ -1,3 +1,4 @@
 numpy==1.24.1
 opencv-contrib-python==4.5.5.62
 pyrealsense2==2.53.1.4623
+zmq
