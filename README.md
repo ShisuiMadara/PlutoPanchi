@@ -1,5 +1,7 @@
 # PlutoPanchi
 This program is responsible for establishing a fast and stable channel of communication between the python wrapper and Pluto. It is very easy to set-up and customise as per need but is powerful enough out-of-box that it can handle drone controls easily. It implements the MSP protocol over a TCP connection and sends the commands as specified by the wrapper and also sends packets periodically to maintain a persistent connection between Pluto and the python wrapper. It should also be noted that it is an essential component of the wrapper package and is required for the wrapper to work.
+<br>
+The complete documentation can be found <a href = "https://docs.google.com/document/d/1g0mEcBW1Y69Aj0LcN4L1GlqutJQJiYZ8/edit?usp=sharing&ouid=107777261984550371902&rtpof=true&sd=true"> HERE </a>.
 
 <br>
 <h1>Installation and building</h1>
