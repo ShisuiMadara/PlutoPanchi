@@ -16,7 +16,6 @@ def publish(data):
     topic = "front"
 
     for i in range(0, len(data)):
-
         if data[i] == True:
             data[i] = 1
         elif data[i] == False:
@@ -34,7 +33,6 @@ def publish(data):
 
 
 def cmd_publisher(cmd_type):
-
     stri = ""
 
     topic = "cmd"
@@ -45,15 +43,12 @@ def cmd_publisher(cmd_type):
 
 
 def listener_thread(pipe):
-
     while True:
         try:
             print(f"{pipe.recv_multipart()}\n\r")
         except zmq.ZMQError as e:
             if e.errno == zmq.ETERM:
                 break
-
-
 
 
 if __name__ == "__main__":
@@ -74,27 +69,55 @@ if __name__ == "__main__":
     socket.subscribe("height")
     currentTarget = 0
     targetHeight = 1.4
-    targets = [[0, 0, targetHeight], [-0.177, -0.141, targetHeight], [0.167, -0.136, targetHeight], [0.156, 0.099, targetHeight], [-0.095, 0.093, targetHeight], [-0.177, -0.141, targetHeight]]   # left-right, front-back, height
+    targets = [
+        [0, 0, targetHeight],
+        [-0.177, -0.141, targetHeight],
+        [0.167, -0.136, targetHeight],
+        [0.156, 0.099, targetHeight],
+        [-0.095, 0.093, targetHeight],
+        [-0.177, -0.141, targetHeight],
+    ]  # left-right, front-back, height
     InitialThrottle = 1460
     InitialRoll = 1483
     InitialPitch = 1501
-    # pidController = PID (targets[0], 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [300, 300, 500], [10, 10, 20], [15, 15, 10])
-    pidController = sqPID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [2, 2, 0], [1, 1, 0], [2, 2, 0], 0.07)
-    # pidController = PID (targets, 2100, 900, [InitialRoll, InitialPitch, InitialThrottle], [0, 0, 0], [0, 0, 0], [0, 0, 0])
-    test = req(InitialRoll, InitialPitch, 1500, InitialThrottle, True, True, False, False, 0, publisher)
-    Thread(target=pidController.startPIDController, args = (socket.recv, test.recieve_pid)).start()
-    # Thread(target=pidController.startPIDController, args = (socket.recv, )).start()
-    # Thread(target = test.mok()).start()
+
+    pidController = sqPID(
+        targets,
+        2100,
+        900,
+        [InitialRoll, InitialPitch, InitialThrottle],
+        [2, 2, 0],
+        [1, 1, 0],
+        [2, 2, 0],
+        0.07,
+    )
+
+    test = req(
+        InitialRoll,
+        InitialPitch,
+        1500,
+        InitialThrottle,
+        True,
+        True,
+        False,
+        False,
+        0,
+        publisher,
+    )
+    Thread(
+        target=pidController.startPIDController, args=(socket.recv, test.recieve_pid)
+    ).start()
+
     while key != ord("q"):
         key = stdscr.getch()
-        print(key)
+        # print(key)
         if key == 49:
             test.take_off()
             print("Zooommm\n\r")
         elif key == 50:
             test.land()
             print("Landing safely....\n\r")
-            # Thread(target = test.recieve_pid()).start()
+
         elif key == 51:
             test.back_flip()
             print("Back FLIP !!!\n\r")
@@ -110,19 +133,19 @@ if __name__ == "__main__":
         elif key == 119:
             test.forward()
             print("Going forward...\n\r")
-            # test.recieve_pid()
+
         elif key == 115:
             test.backward()
             print("Going backward\n\r")
-            # test.recieve_pid()
+
         elif key == 97:
             test.left()
             print("Going left\n\r")
-            # test.recieve_pid()
+
         elif key == 100:
             test.right()
             print("Going right\n\r")
-            # test.recieve_pid()
+
         elif key == 32:
             if test.is_armed:
                 test.land()
@@ -135,21 +158,11 @@ if __name__ == "__main__":
         elif key == curses.KEY_UP:
             test.increase_height()
             print("increasing height...\n\r")
-            # Thread(target = test.recieve_pid()).start()
+
         elif key == curses.KEY_DOWN:
             test.decrease_height()
             print("decreasing height...\n\r")
-            # Thread(target = test.recieve_pid()).start()
-        # else:
-        # Thread(target = test.recieve_pid()).start()
 
     curses.endwin()
-    # publish(data)
-    # cmd_publisher(cmd_type)
 
-    # p_thread = Thread(target=publish(data))
-    # p_thread.start()
-
-    # del  publisher
     ctx.term()
-

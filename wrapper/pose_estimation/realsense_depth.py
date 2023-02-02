@@ -1,13 +1,12 @@
 import pyrealsense2 as rs
 import numpy as np
 
+
 class DepthCamera:
     def __init__(self):
-        # Configure depth and color streams
         self.pipeline = rs.pipeline()
         config = rs.config()
 
-        # Get device product line for setting a supporting resolution
         pipeline_wrapper = rs.pipeline_wrapper(self.pipeline)
         pipeline_profile = config.resolve(pipeline_wrapper)
         device = pipeline_profile.get_device()
@@ -16,9 +15,6 @@ class DepthCamera:
         config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 60)
         config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 60)
 
-
-
-        # Start streaming
         self.pipeline.start(config)
 
     def get_frame(self):
@@ -35,4 +31,3 @@ class DepthCamera:
 
     def release(self):
         self.pipeline.stop()
-

@@ -1,5 +1,6 @@
 import zmq
 
+
 class req:
     def __init__(
         self,
@@ -12,9 +13,8 @@ class req:
         alt_hold,
         is_armed,
         command_type,
-        publisher
+        publisher,
     ):
-
         self.roll = roll
         self.pitch = pitch
         self.yaw = yaw
@@ -25,14 +25,12 @@ class req:
         self.is_armed = is_armed
         self.publisher = publisher
 
-
     def publish(self, data):
         stri = ""
 
         topic = "front"
 
         for i in range(0, len(data)):
-
             if data[i] == True:
                 data[i] = 1
             elif data[i] == False:
@@ -48,9 +46,7 @@ class req:
         self.publisher.send_string(topic, flags=zmq.SNDMORE)
         self.publisher.send_string(stri)
 
-
     def cmd_publisher(self, cmd_type):
-
         stri = ""
 
         topic = "cmd"
@@ -59,9 +55,7 @@ class req:
         self.publisher.send_string(topic, flags=zmq.SNDMORE)
         self.publisher.send_string(stri)
 
-
     def listener_thread(pipe):
-
         while True:
             try:
                 print(f"{pipe.recv_multipart()}\n\r")
@@ -70,8 +64,6 @@ class req:
                     break
 
     def arm(self):
-
-        # do arming
         self.is_armed = True
 
         arr = [
@@ -89,7 +81,6 @@ class req:
         print("ARM IS CALLED\n\r")
 
     def disarm(self):
-
         # do disarming
         self.is_armed = False
 
@@ -107,7 +98,6 @@ class req:
         self.publish(arr)
 
     def forward(self):
-
         self.pitch = min(self.pitch + 100, 2100)
 
         arr = [
@@ -125,7 +115,6 @@ class req:
         print("FORWARD IS CALLED\n\r")
 
     def resend(self):
-
         arr = [
             str(self.roll),
             str(self.pitch),
@@ -160,7 +149,6 @@ class req:
         print("BACKWARD IS CALLED\n\r")
 
     def left(self):
-
         self.roll = max(self.roll - 100, 900)
 
         arr = [
@@ -177,7 +165,6 @@ class req:
         print("LEFT IS CALLED\n\r")
 
     def right(self):
-
         self.roll = min(self.roll + 100, 2100)
 
         arr = [
@@ -195,7 +182,6 @@ class req:
         print("RIGHT IS CALLED\n\r")
 
     def left_yaw(self):
-
         if self.yaw == 900:
             print("Max left yaw reached\n\r")
             pass
@@ -215,7 +201,6 @@ class req:
         self.publish(arr)
 
     def right_yaw(self):
-
         if self.yaw == 2100:
             print("Max right yaw reached\n\r")
 
@@ -234,7 +219,6 @@ class req:
         self.publish(arr)
 
     def increase_height(self):
-
         if self.throttle == 2100:
             print("Max throttle. Cannot increase\n\r")
             pass
@@ -254,7 +238,6 @@ class req:
         self.publish(arr)
 
     def decrease_height(self):
-
         if self.throttle == 900:
             print("Throttle at minimum. Cannot decrease\n\r")
             pass
@@ -274,7 +257,6 @@ class req:
         self.publish(arr)
 
     def take_off(self):
-
         if not self.is_armed:
             self.arm()
         self.command_type = 1
@@ -289,12 +271,11 @@ class req:
             str(self.alt_hold),
             str(self.is_armed),
         ]
-        print(f'{arr}\n\r')
+       
         self.publish(arr)
         self.cmd_publisher(self.command_type)
 
     def land(self):
-
         self.command_type = 2
 
         arr = [
@@ -311,7 +292,6 @@ class req:
         self.cmd_publisher(self.command_type)
 
     def back_flip(self):
-
         self.command_type = 3
 
         arr = [
@@ -328,7 +308,6 @@ class req:
         self.cmd_publisher(self.command_type)
 
     def front_flip(self):
-
         self.command_type = 4
 
         arr = [
@@ -345,7 +324,6 @@ class req:
         self.cmd_publisher(self.command_type)
 
     def right_flip(self):
-
         self.command_type = 5
 
         arr = [
@@ -362,7 +340,6 @@ class req:
         self.cmd_publisher(self.command_type)
 
     def left_flip(self):
-
         self.command_type = 6
 
         arr = [
@@ -379,7 +356,6 @@ class req:
         self.cmd_publisher(self.command_type)
 
     def set_roll(self, rol):
-
         self.roll = rol
         arr = [
             str(self.roll),
@@ -394,7 +370,6 @@ class req:
         self.publish(arr)
 
     def set_pitch(self, pit):
-
         self.pitch = pit
 
         arr = [
@@ -410,7 +385,6 @@ class req:
         self.publish(arr)  # publish
 
     def set_yaw(self, ya):
-
         self.yaw = ya
         arr = [
             str(self.roll),
@@ -425,7 +399,6 @@ class req:
         self.publish(arr)
 
     def set_throttle(self, throt):
-
         self.throttle = throt
 
         arr = [
@@ -441,7 +414,6 @@ class req:
         self.publish(arr)
 
     def reset(self):
-
         self.roll = 1500
         self.yaw = 1500
         self.pitch = 1500
@@ -473,8 +445,5 @@ class req:
             str(self.alt_hold),
             str(self.is_armed),
         ]
-        print(f'Publish data: {arr}\n\r')
-        self.publish(arr)
 
-    def mok(self):
-        print("hoi\n\r")
+        self.publish(arr)
