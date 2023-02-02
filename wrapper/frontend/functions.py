@@ -81,15 +81,14 @@ if __name__ == "__main__":
     InitialRoll = 1483
     InitialPitch = 1501
 
-    pidController = sqPID(
-        targets,
+    pidController = PID(
+        targets[0],
         2100,
         900,
         [InitialRoll, InitialPitch, InitialThrottle],
-        [2, 2, 0],
-        [1, 1, 0],
-        [2, 2, 0],
-        0.07,
+        [2, 2, 100],
+        [1, 1, 5],
+        [2, 2, 2],
     )
 
     test = req(
