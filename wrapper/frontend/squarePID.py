@@ -1,11 +1,12 @@
 import time
+from multiprocessing import shared_memory
+from array import array
 
 
 class PID:
     _Kp: list
     _Ki: list
     _Kd: list
-    PID_Enabled: bool
     _prevTime: int
     _prevDistance: float
     targets: list
@@ -14,6 +15,7 @@ class PID:
     _bias: list
     _currentTargetIndex: int
     _threshold: float
+    _sharedMemoryName: str
 
     def __init__(
         self,
@@ -25,8 +27,8 @@ class PID:
         integralConst: list,
         deferentialConst: list,
         threshold: float,
+        shm_Name: str,
     ) -> None:
-        self.PID_Enabled = True
         self.targets = targets
         self._Kp = proportionalConst
         self._Ki = integralConst
@@ -36,57 +38,54 @@ class PID:
         self._bias = bias
         self._threshold = threshold
         self._currentTargetIndex = 0
+        self._sharedMemoryName = shm_Name
 
     def _getNextVal(self, currentDistance: float, idx: int) -> int:
         currentTime: int = self._getTime()
-       
-
         timeInterval: int = min(currentTime - self._prevTime, 25)
-
         currentError: float = self._getError(currentDistance, idx)
         D_Val: float = (self._Kd[idx] * currentError) / timeInterval
         P_Val: float = self._Kp[idx] * currentError
         I_Val: float = self._Ki[idx] * currentError * timeInterval
         PID_Val: int = round(self._bias[idx] + P_Val + I_Val + D_Val)
-
         if self._Kp[idx] == 0 and self._Ki[idx] == 0 and self._Kd[idx] == 0:
             currentError = 0
         return min(max(PID_Val, self._lowerBound), self._upperBound), currentError
 
     def startPIDController(self, dataFetcher, respondTo) -> None:
+        shm = shared_memory.SharedMemory(self._sharedMemoryName)
         try:
-            while 1:
+            buffer = shm.buf
+            while array(shm.buf[:2])[0]:
                 self._prevTime = self._getTime()
                 time.sleep(0.001)
-                if self.PID_Enabled:
-                    dataFetcher()
-                    recvData = dataFetcher().decode("utf-8").split()
-                
-
-                    for i in range(len(recvData)):
-                        if recvData[i] is None:
-                            recvData[i] = 1500
-                        if recvData[i] == "None":
-                            recvData[i] = 1500
-                  
-                    recievedData = [float(i) / 1000 for i in recvData]
-                    RPMS = []
-                    Flag = True
-                    if self._currentTargetIndex < len(self.targets):
-                        for i in [0, 1, 2]:
-                            newRPM, error = self._getNextVal(recievedData[i], i)
-                            RPMS.append(newRPM)
-                            if abs(error) > self._threshold:
-                                Flag = False
-                    if Flag and self._currentTargetIndex < len(self.targets):
-                        self._currentTargetIndex += 1
-                        RPMS = self._bias
-                    elif Flag and self._currentTargetIndex == len(self.targets):
-                        RPMS = [900, 900, 900]
-                  
-                    respondTo(RPMS)
+                dataFetcher()
+                recvData = dataFetcher().decode("utf-8").split()
+                for i in range(len(recvData)):
+                    if recvData[i] is None:
+                        recvData[i] = 1500
+                    if recvData[i] == "None":
+                        recvData[i] = 1500
+                recievedData = [float(i) / 1000 for i in recvData]
+                RPMS = []
+                Flag = True
+                if self._currentTargetIndex < len(self.targets):
+                    for i in [0, 1, 2]:
+                        newRPM, error = self._getNextVal(recievedData[i], i)
+                        RPMS.append(newRPM)
+                        if abs(error) > self._threshold:
+                            Flag = False
+                if Flag and self._currentTargetIndex < len(self.targets):
+                    self._currentTargetIndex += 1
+                    RPMS = self._bias
+                elif Flag and self._currentTargetIndex == len(self.targets):
+                    buffer[1] = 1
+                    print('Tracing completed... now landing\n\r')
+                    break
+                respondTo(RPMS)
         except KeyboardInterrupt:
             pass
+        shm.close()
 
     def _getError(self, currentValue: float, idx: int) -> float:
         return -self.targets[self._currentTargetIndex][idx] + currentValue

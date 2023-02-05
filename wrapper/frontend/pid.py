@@ -50,27 +50,25 @@ class PID:
 
     def startPIDController(self, dataFetcher, respondTo) -> None:
         try:
-            while 1:
+            while self.PID_Enabled:
                 self._prevTime = self._getTime()
                 time.sleep(0.001)
-                if self.PID_Enabled:
-                    dataFetcher()
-                    recvData = dataFetcher().decode("utf-8").split()
+                dataFetcher()
+                recvData = dataFetcher().decode("utf-8").split()
 
-                    for i in range(len(recvData)):
-                        if recvData[i] is None:
-                            recvData[i] = 1500
-                        if recvData[i] == "None":
-                            recvData[i] = 1500
+                for i in range(len(recvData)):
+                    if recvData[i] is None:
+                        recvData[i] = 1500
+                    if recvData[i] == "None":
+                        recvData[i] = 1500
 
-                    recievedData = [float(i) / 1000 for i in recvData]
-                    RPMS = []
-                    for i in [0, 1, 2]:
-                        RPMS.append(self._getNextVal(recievedData[i], i))
-                    respondTo(RPMS)
+                recievedData = [float(i) / 1000 for i in recvData]
+                RPMS = []
+                for i in [0, 1, 2]:
+                    RPMS.append(self._getNextVal(recievedData[i], i))
+                respondTo(RPMS)
         except KeyboardInterrupt:
             pass
-
     def _getError(self, currentValue: float, idx: int) -> float:
         return -self.target[idx] + currentValue
 
