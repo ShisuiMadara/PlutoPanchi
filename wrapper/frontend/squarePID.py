@@ -56,7 +56,7 @@ class PID:
         shm = shared_memory.SharedMemory(self._sharedMemoryName)
         try:
             buffer = shm.buf
-            while array(shm.buf[:2])[0]:
+            while buffer[0]:
                 self._prevTime = self._getTime()
                 time.sleep(0.001)
                 dataFetcher()

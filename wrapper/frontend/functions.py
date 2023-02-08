@@ -1,6 +1,6 @@
 import zmq
 # from pid import PID
-from wrapper.frontend.squarePID import PID as sqPID
+from squarePID import PID as sqPID
 from multiprocessing import shared_memory
 from threading import Thread
 import time
@@ -158,18 +158,27 @@ if __name__ == "__main__":
                 print("Going backward\n\r")
             elif key == 116 and not buffer[0]:
                 print('Tracking drone now...')
-                key = ""
+                key = 0
                 targets = []
-                while key != ord('t'):
+                while True:
+                    print("HEllo")
+                    print(key)
                     key = stdscr.getch()
+                    print(key)
                     recvData = socket.recv().decode("utf-8").split()
+                    print(recvData)
                     for i in range(len(recvData)):
+                        
                         if recvData[i] is None:
                             recvData[i] = 1500
                         if recvData[i] == "None":
                             recvData[i] = 1500
                     recievedData = [float(i) / 1000 for i in recvData]
                     targets.append(recvData)
+                    print("Tracking")
+                    if key == 116:
+                        print("Tracking off")
+                        break
             elif key == 97:
                 test.left()
                 print("Going left\n\r")
