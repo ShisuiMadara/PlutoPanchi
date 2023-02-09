@@ -40,6 +40,8 @@ def height(data):
         if i == len(data) - 1:
             continue
         stri += " "
+    
+    print(stri)
 
     publisher.send_string(topic, flags=zmq.SNDMORE)
     publisher.send_string(stri)

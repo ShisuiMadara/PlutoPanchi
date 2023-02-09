@@ -160,13 +160,14 @@ if __name__ == "__main__":
                 print('Tracking drone now...')
                 key = 0
                 targets = []
-                while True:
+                bu = 0
+                while bu != ord('k'):
                     print("HEllo")
-                    print(key)
-                    key = stdscr.getch()
-                    print(key)
-                    recvData = socket.recv().decode("utf-8").split()
-                    print(recvData)
+                    bu = stdscr.getch() 
+                    socket.recv()
+
+                    recvData= socket.recv().decode("utf-8").split()
+                    # print(recvData)
                     for i in range(len(recvData)):
                         
                         if recvData[i] is None:
@@ -176,9 +177,6 @@ if __name__ == "__main__":
                     recievedData = [float(i) / 1000 for i in recvData]
                     targets.append(recvData)
                     print("Tracking")
-                    if key == 116:
-                        print("Tracking off")
-                        break
             elif key == 97:
                 test.left()
                 print("Going left\n\r")
