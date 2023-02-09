@@ -57,6 +57,7 @@ class PID:
         try:
             buffer = shm.buf
             while buffer[0]:
+                # print(buffer[0])
                 self._prevTime = self._getTime()
                 time.sleep(0.001)
                 dataFetcher()
@@ -66,7 +67,12 @@ class PID:
                         recvData[i] = 1500
                     if recvData[i] == "None":
                         recvData[i] = 1500
+                
+                # print(recvData)
+
                 recievedData = [float(i) / 1000 for i in recvData]
+
+                # print(recievedData)
                 RPMS = []
                 Flag = True
                 if self._currentTargetIndex < len(self.targets):
@@ -82,13 +88,15 @@ class PID:
                     buffer[1] = 1
                     print('Tracing completed... now landing\n\r')
                     break
+
+                print(RPMS)
                 respondTo(RPMS)
         except KeyboardInterrupt:
             pass
         shm.close()
 
     def _getError(self, currentValue: float, idx: int) -> float:
-        return -self.targets[self._currentTargetIndex][idx] + currentValue
+        return currentValue - float(self.targets[self._currentTargetIndex][idx]) 
 
     def _getTime(self) -> int:
         return round(time.time() * 1000)

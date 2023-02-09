@@ -68,11 +68,11 @@ if __name__ == "__main__":
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
     # set parameters for PID controller
-    targetHeight = 1.4
+    targetHeight = 0.7
     targets = []  # left-right, front-back, height
     InitialThrottle = 1460
-    InitialRoll = 1483
-    InitialPitch = 1501
+    InitialRoll = 1492
+    InitialPitch = 1520
     acceptedErrorRange = 0.07
     # setup PID shared memory
     # this shared memory contains flag to enable and disable PID
@@ -97,6 +97,7 @@ if __name__ == "__main__":
     try:
         while key != ord("q"):
             key = stdscr.getch()
+            print(buffer[0])
             if key == 49 and not buffer[0]:
                 test.take_off()
                 buffer = shm.buf
@@ -121,9 +122,9 @@ if __name__ == "__main__":
                         2100,
                         900,
                         [InitialRoll, InitialPitch, InitialThrottle],
-                        [2, 2, 0],
-                        [1, 1, 0],
-                        [2, 2, 0],
+                        [2, 2, 20],
+                        [1, 1, 10],
+                        [2, 2, 2],
                         acceptedErrorRange,
                         shm.name
                     )
@@ -135,9 +136,10 @@ if __name__ == "__main__":
             elif key == 50 or buffer[1]:
                 buffer[0] = 0
                 buffer[1] = 0
-                thread.join()
+                
                 test.land()
                 print("Landing safely....\n\r")
+                thread.join()
             elif key == 51:
                 test.back_flip()
                 print("Back FLIP !!!\n\r")
