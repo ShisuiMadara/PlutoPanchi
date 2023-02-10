@@ -123,7 +123,7 @@ if __name__ == "__main__":
                         2100,
                         900,
                         [InitialRoll, InitialPitch, InitialThrottle],
-                        [2, 2, 1600],
+                        [2, 2, 100],
                         [1, 1, 100],
                         [2, 2, 4],
                         acceptedErrorRange,
