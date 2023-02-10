@@ -98,15 +98,13 @@ class PID:
     def _getError(self, currentValue: float, idx: int) -> float:
         print("Error is \n\r")
         print(currentValue - float(self.targets[self._currentTargetIndex][idx]))
-        print("------------------\n\r")
+        print("\n\r------------------\n\r")
         print("Current value\n\r")
         print(currentValue)
-        print("-----------------\n\r")
+        print("\n\r-----------------\n\r")
         print(self.targets, end="\n\r")
         print("-----------------\n\r")
-        return (
-            -(currentValue - float(self.targets[self._currentTargetIndex][idx])) / 100
-        )
+        return currentValue - float(self.targets[self._currentTargetIndex][idx])
 
     def _getTime(self) -> int:
         return round(time.time() * 1000)
