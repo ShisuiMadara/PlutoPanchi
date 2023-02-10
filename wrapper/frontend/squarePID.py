@@ -43,7 +43,9 @@ class PID:
     def _getNextVal(self, currentDistance: float, idx: int) -> int:
         currentTime: int = self._getTime()
         timeInterval: int = min(currentTime - self._prevTime, 25)
-        currentError: float = self._getError(currentDistance, idx)
+        currentError: float = self._getError(currentDistance, idx)/100
+
+        print(currentError)
         D_Val: float = (self._Kd[idx] * currentError) / timeInterval
         P_Val: float = self._Kp[idx] * currentError
         I_Val: float = self._Ki[idx] * currentError * timeInterval
@@ -96,7 +98,8 @@ class PID:
         shm.close()
 
     def _getError(self, currentValue: float, idx: int) -> float:
-        return currentValue - float(self.targets[self._currentTargetIndex][idx]) 
+        print((currentValue - float(self.targets[self._currentTargetIndex][idx])))
+        return -(currentValue - float(self.targets[self._currentTargetIndex][idx]))/100
 
     def _getTime(self) -> int:
         return round(time.time() * 1000)
