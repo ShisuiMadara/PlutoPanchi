@@ -172,13 +172,12 @@ if __name__ == "__main__":
                     recvData = socket.recv().decode("utf-8").split()
                     # print(recvData)
                     for i in range(len(recvData)):
-
                         if recvData[i] is None:
                             recvData[i] = 1500
                         if recvData[i] == "None":
                             recvData[i] = 1500
-                    recievedData = [float(i) / 1000 for i in recvData]
-                    targets.append(recvData)
+                    receivedData = [float(i) / 1000 for i in recvData]
+                    targets.append(receivedData)
                     print("Tracking\n\r")
             elif key == 97:
                 test.left()
