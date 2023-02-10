@@ -69,7 +69,7 @@ if __name__ == "__main__":
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
     # set parameters for PID controller
-    targetHeight = 1.0
+    targetHeight = 0.1
     targets = []  # left-right, front-back, height
     InitialThrottle = 1460
     InitialRoll = 1492
