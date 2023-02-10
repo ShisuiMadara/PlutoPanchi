@@ -1,4 +1,5 @@
 import zmq
+
 # from pid import PID
 from squarePID import PID as sqPID
 from multiprocessing import shared_memory
@@ -76,11 +77,11 @@ if __name__ == "__main__":
     acceptedErrorRange = 0.07
     # setup PID shared memory
     # this shared memory contains flag to enable and disable PID
-    shm = shared_memory.SharedMemory(create=True, size = 2)
+    shm = shared_memory.SharedMemory(create=True, size=2)
     buffer = shm.buf
     buffer = bytearray([0, 0])
     # setup PID
-    pidController : sqPID
+    pidController: sqPID
     test = req(
         InitialRoll,
         InitialPitch,
@@ -114,7 +115,7 @@ if __name__ == "__main__":
                         [1, 1, 1],
                         [2, 2, 2],
                         -1,
-                        shm.name
+                        shm.name,
                     )
                 else:
                     pidController = sqPID(
@@ -126,17 +127,18 @@ if __name__ == "__main__":
                         [1, 1, 100],
                         [2, 2, 4],
                         acceptedErrorRange,
-                        shm.name
+                        shm.name,
                     )
                 thread = Thread(
-                    target=pidController.startPIDController, args=(socket.recv, test.recieve_pid)
+                    target=pidController.startPIDController,
+                    args=(socket.recv, test.recieve_pid),
                 )
                 thread.start()
                 print("Zooommm\n\r")
             elif key == 50 or buffer[1]:
                 buffer[0] = 0
                 buffer[1] = 0
-                
+
                 test.land()
                 print("Landing safely....\n\r")
                 thread.join()
@@ -159,26 +161,25 @@ if __name__ == "__main__":
                 test.backward()
                 print("Going backward\n\r")
             elif key == 116 and not buffer[0]:
-                print('Tracking drone now...')
+                print("Tracking drone now...\n\r")
                 key = 0
                 targets = []
                 bu = 0
-                while bu != ord('k'):
-                    print("HEllo")
-                    bu = stdscr.getch() 
+                while bu != ord("k"):
+                    bu = stdscr.getch()
                     socket.recv()
 
-                    recvData= socket.recv().decode("utf-8").split()
+                    recvData = socket.recv().decode("utf-8").split()
                     # print(recvData)
                     for i in range(len(recvData)):
-                        
+
                         if recvData[i] is None:
                             recvData[i] = 1500
                         if recvData[i] == "None":
                             recvData[i] = 1500
                     recievedData = [float(i) / 1000 for i in recvData]
                     targets.append(recvData)
-                    print("Tracking")
+                    print("Tracking\n\r")
             elif key == 97:
                 test.left()
                 print("Going left\n\r")
@@ -202,7 +203,7 @@ if __name__ == "__main__":
                 test.decrease_height()
                 print("decreasing height...\n\r")
     except:
-        print('Exception occured exiting...landing\n\r')
+        print("Exception occured exiting...landing\n\r")
     # detach shared memory
     shm.close()
     shm.unlink()

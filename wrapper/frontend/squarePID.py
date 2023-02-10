@@ -44,8 +44,6 @@ class PID:
         currentTime: int = self._getTime()
         timeInterval: int = min(currentTime - self._prevTime, 25)
         currentError: float = self._getError(currentDistance, idx)
-
-        print(currentError)
         D_Val: float = (self._Kd[idx] * currentError) / timeInterval
         P_Val: float = self._Kp[idx] * currentError
         I_Val: float = self._Ki[idx] * currentError * timeInterval
@@ -69,7 +67,7 @@ class PID:
                         recvData[i] = 1500
                     if recvData[i] == "None":
                         recvData[i] = 1500
-                
+
                 # print(recvData)
 
                 recievedData = [float(i) / 1000 for i in recvData]
@@ -88,7 +86,7 @@ class PID:
                     RPMS = self._bias
                 elif Flag and self._currentTargetIndex == len(self.targets):
                     buffer[1] = 1
-                    print('Tracing completed... now landing\n\r')
+                    print("Tracing completed... now landing\n\r")
                     break
 
                 print(RPMS)
@@ -100,13 +98,15 @@ class PID:
     def _getError(self, currentValue: float, idx: int) -> float:
         print("Error is \n\r")
         print(currentValue - float(self.targets[self._currentTargetIndex][idx]))
-        print("------------------")
+        print("------------------\n\r")
         print("Current value\n\r")
         print(currentValue)
-        print("-----------------")
+        print("-----------------\n\r")
         print(self.targets, end="\n\r")
-        print("-----------------")
-        return -(currentValue - float(self.targets[self._currentTargetIndex][idx]))/100
+        print("-----------------\n\r")
+        return (
+            -(currentValue - float(self.targets[self._currentTargetIndex][idx])) / 100
+        )
 
     def _getTime(self) -> int:
         return round(time.time() * 1000)
