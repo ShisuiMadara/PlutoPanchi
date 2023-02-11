@@ -1,6 +1,7 @@
 import time
 from multiprocessing import shared_memory
 from array import array
+from cli import req
 
 
 class PID:
@@ -16,6 +17,7 @@ class PID:
     _currentTargetIndex: int
     _threshold: float
     _sharedMemoryName: str
+    _droneController: req
 
     def __init__(
         self,
@@ -28,6 +30,7 @@ class PID:
         deferentialConst: list,
         threshold: float,
         shm_Name: str,
+        droneController: req,
     ) -> None:
         self.targets = targets
         self._Kp = proportionalConst
@@ -39,6 +42,7 @@ class PID:
         self._threshold = threshold
         self._currentTargetIndex = 0
         self._sharedMemoryName = shm_Name
+        self._droneController = droneController
 
     def _getNextVal(self, currentDistance: float, idx: int) -> int:
         currentTime: int = self._getTime()
@@ -87,9 +91,8 @@ class PID:
                 elif Flag and self._currentTargetIndex == len(self.targets):
                     buffer[1] = 1
                     print("Tracing completed... now landing\n\r")
+                    self._droneController.land()
                     break
-
-                print(RPMS)
                 respondTo(RPMS)
         except KeyboardInterrupt:
             pass

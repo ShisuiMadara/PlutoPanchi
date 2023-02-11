@@ -115,6 +115,7 @@ if __name__ == "__main__":
                         [2, 2, 0],
                         -1,
                         shm.name,
+                        test,
                     )
                 else:
                     pidController = sqPID(
@@ -127,6 +128,7 @@ if __name__ == "__main__":
                         [2, 2, 4],
                         acceptedErrorRange,
                         shm.name,
+                        test,
                     )
                 thread = Thread(
                     target=pidController.startPIDController,
@@ -134,10 +136,9 @@ if __name__ == "__main__":
                 )
                 thread.start()
                 print("Zooommm\n\r")
-            elif key == 50 or buffer[1]:
+            elif key == 50:
                 buffer[0] = 0
                 buffer[1] = 0
-
                 test.land()
                 print("Landing safely....\n\r")
                 thread.join()
