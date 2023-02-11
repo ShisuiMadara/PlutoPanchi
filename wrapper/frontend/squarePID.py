@@ -73,7 +73,7 @@ class PID:
                         recvData[i] = 1500
 
 
-                recievedData = [float(i) / 1000 for i in recvData]
+                recievedData = [float(i) / 100 for i in recvData]
 
                 # print(recievedData)
                 RPMS = []
