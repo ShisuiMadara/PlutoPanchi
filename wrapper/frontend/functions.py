@@ -74,7 +74,7 @@ if __name__ == "__main__":
     InitialThrottle = 1460
     InitialRoll = 1500
     InitialPitch = 1510
-    acceptedErrorRange = 0.07
+    acceptedErrorRange = 0.01
     # setup PID shared memory
     # this shared memory contains flag to enable and disable PID
     shm = shared_memory.SharedMemory(create=True, size=2)

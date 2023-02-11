@@ -46,7 +46,7 @@ class PID:
 
     def _getNextVal(self, currentDistance: float, idx: int) -> int:
         currentTime: int = self._getTime()
-        timeInterval: int = min(currentTime - self._prevTime, 25)
+        timeInterval: int = max(min(currentTime - self._prevTime, 25), 1)
         currentError: float = self._getError(currentDistance, idx)
         D_Val: float = (self._Kd[idx] * currentError) / timeInterval
         P_Val: float = self._Kp[idx] * currentError
@@ -63,7 +63,7 @@ class PID:
             while buffer[0]:
                 # print(buffer[0])
                 self._prevTime = self._getTime()
-                time.sleep(0.001)
+                # time.sleep(0.001)
                 dataFetcher()
                 recvData = dataFetcher().decode("utf-8").split()
                 for i in range(len(recvData)):
