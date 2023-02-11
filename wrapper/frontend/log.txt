@@ -1,9 +1,27 @@
 [?1049h[22;0;0t[1;31r(B[m[4l[?7h[?1h=[H[2JHit 'q' to quit
-12[31;1H[?1049l[23;0;0t[?1l>ARM IS CALLED
+ttk11[31;1H[?1049l[23;0;0t[?1l>Tracking drone now...
+
+Tracking
+
+Tracking
+
+ARM IS CALLED
 
 Zooommm
 
-Landing safely....
+0
+2
+0.0 0.0 0.0 
+True
+1
+2
+0.0 0.0010000000000000009 -0.008999999999999897 
+True
+2
+2
+
+True
+Tracing completed... now landing
 
 Exception occured exiting...landing
 
