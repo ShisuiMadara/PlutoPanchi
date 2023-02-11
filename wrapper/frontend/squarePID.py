@@ -91,7 +91,7 @@ class PID:
                     self._currentTargetIndex += 1
                     RPMS = self._bias
                     respondTo(RPMS)
-                    time.sleep(0.1)
+                    time.sleep(1)
                 elif Flag and self._currentTargetIndex == len(self.targets):
                     buffer[1] = 1
                     print("Tracing completed... now landing\n\r")
