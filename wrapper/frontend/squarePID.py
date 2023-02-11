@@ -72,7 +72,6 @@ class PID:
                     if recvData[i] == "None":
                         recvData[i] = 1500
 
-                # print(recvData)
 
                 recievedData = [float(i) / 1000 for i in recvData]
 
