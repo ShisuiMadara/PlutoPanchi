@@ -79,12 +79,16 @@ class PID:
                 # print(recievedData)
                 RPMS = []
                 Flag = True
+                print(self._currentTargetIndex)
+                print(len(self.targets))
                 if self._currentTargetIndex < len(self.targets):
                     for i in [0, 1, 2]:
                         newRPM, error = self._getNextVal(recievedData[i], i)
                         RPMS.append(newRPM)
+                        print(error, end=" ")
                         if abs(error) > self._threshold:
                             Flag = False
+                print(Flag)
                 if Flag and self._currentTargetIndex < len(self.targets):
                     self._currentTargetIndex += 1
                     RPMS = self._bias
