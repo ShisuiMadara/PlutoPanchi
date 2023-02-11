@@ -88,7 +88,7 @@ class PID:
                         print(error, end=" ")
                         if abs(error) > self._threshold:
                             Flag = False
-                print(Flag, end="\n\r")
+                print(f'\n\r{Flag}', end="\n\r")
                 if Flag and self._currentTargetIndex < len(self.targets):
                     self._currentTargetIndex += 1
                     RPMS = self._bias
@@ -103,14 +103,6 @@ class PID:
         shm.close()
 
     def _getError(self, currentValue: float, idx: int) -> float:
-        print("Error is \n\r")
-        print(currentValue - float(self.targets[self._currentTargetIndex][idx]))
-        print("\n\r------------------\n\r")
-        print("Current value\n\r")
-        print(currentValue)
-        print("\n\r-----------------\n\r")
-        print(self.targets, end="\n\r")
-        print("-----------------\n\r")
         return currentValue - float(self.targets[self._currentTargetIndex][idx])
 
     def _getTime(self) -> int:
