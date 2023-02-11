@@ -72,14 +72,13 @@ class PID:
                     if recvData[i] == "None":
                         recvData[i] = 1500
 
-
                 recievedData = [float(i) / 100 for i in recvData]
 
                 # print(recievedData)
                 RPMS = []
                 Flag = True
                 print(self._currentTargetIndex, end="\n\r")
-                print(len(self.targets), end='\n\r')
+                print(len(self.targets), end="\n\r")
                 if self._currentTargetIndex < len(self.targets):
                     for i in [0, 1, 2]:
                         newRPM, error = self._getNextVal(recievedData[i], i)
@@ -87,10 +86,12 @@ class PID:
                         print(error, end=" ")
                         if abs(error) > self._threshold:
                             Flag = False
-                print(f'\n\r{Flag}', end="\n\r")
+                print(f"\n\r{Flag}", end="\n\r")
                 if Flag and self._currentTargetIndex < len(self.targets):
                     self._currentTargetIndex += 1
                     RPMS = self._bias
+                    respondTo(RPMS)
+                    time.sleep(0.1)
                 elif Flag and self._currentTargetIndex == len(self.targets):
                     buffer[1] = 1
                     print("Tracing completed... now landing\n\r")
