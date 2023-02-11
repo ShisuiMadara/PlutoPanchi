@@ -1,0 +1,9 @@
+[?1049h[22;0;0t[1;31r(B[m[4l[?7h[?1h=[H[2JHit 'q' to quit
+12[31;1H[?1049l[23;0;0t[?1l>ARM IS CALLED
+
+Zooommm
+
+Landing safely....
+
+Exception occured exiting...landing
+
