@@ -69,11 +69,11 @@ if __name__ == "__main__":
     socket.connect(f"tcp://{host}:{port}")
     socket.subscribe("height")
     # set parameters for PID controller
-    targetHeight = 0.1
+    targetHeight = 1.1
     targets = []  # left-right, front-back, height
     InitialThrottle = 1460
-    InitialRoll = 1492
-    InitialPitch = 1520
+    InitialRoll = 1500
+    InitialPitch = 1510
     acceptedErrorRange = 0.07
     # setup PID shared memory
     # this shared memory contains flag to enable and disable PID
@@ -98,7 +98,6 @@ if __name__ == "__main__":
     try:
         while key != ord("q"):
             key = stdscr.getch()
-            print(buffer[0])
             if key == 49 and not buffer[0]:
                 test.take_off()
                 buffer = shm.buf
@@ -111,9 +110,9 @@ if __name__ == "__main__":
                         2100,
                         900,
                         [InitialRoll, InitialPitch, InitialThrottle],
-                        [2, 2, 2],
-                        [1, 1, 1],
-                        [2, 2, 2],
+                        [2, 2, 0],
+                        [1, 1, 0],
+                        [2, 2, 0],
                         -1,
                         shm.name,
                     )
@@ -123,8 +122,8 @@ if __name__ == "__main__":
                         2100,
                         900,
                         [InitialRoll, InitialPitch, InitialThrottle],
-                        [2, 2, 100],
-                        [1, 1, 100],
+                        [20, 20, 100],
+                        [10, 10, 100],
                         [2, 2, 4],
                         acceptedErrorRange,
                         shm.name,
