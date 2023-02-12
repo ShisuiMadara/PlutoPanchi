@@ -123,9 +123,9 @@ if __name__ == "__main__":
                         2100,
                         900,
                         [InitialRoll, InitialPitch, InitialThrottle],
-                        [3, 4.5, 8],
-                        [2, 2, 0.5],
-                        [0.813, 0.3, 0.05],
+                        [3, 4.5, 0.9919],
+                        [0.02, 0.1, 0.03],
+                        [1.613, 0.6, 0.09],
                         # [4, 4, 0.9919],
                         # [15, 15, 0.09940],
                         # [35, 35, 0.047],
@@ -182,7 +182,7 @@ if __name__ == "__main__":
                             recvData[i] = 1500
                         if recvData[i] == "None":
                             recvData[i] = 1500
-                    receivedData = [float(i) / 100 for i in recvData]
+                    receivedData = [float(i) / 10 for i in recvData]
                     targets.append(receivedData)
                     print("Tracking\n\r")
             elif key == 97:

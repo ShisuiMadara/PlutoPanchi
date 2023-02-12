@@ -54,8 +54,8 @@ class PID:
         PID_Val: int = round(self._bias[idx] + P_Val + I_Val + D_Val)
         if self._Kp[idx] == 0 and self._Ki[idx] == 0 and self._Kd[idx] == 0:
             currentError = 0
-        if self._Kp[idx] == 0.9919 and self._Ki[idx] == 0.09940 and self._Kd[idx] == 0.047:
-            currentError = 0
+        # if self._Kp[idx] == 0.9919 and self._Ki[idx] == 0.09940 and self._Kd[idx] == 0.047:
+        #     currentError = 0
         return min(max(PID_Val, self._lowerBound), self._upperBound), currentError
 
         #  [2, 2, 0.9919],
@@ -78,7 +78,7 @@ class PID:
                     if recvData[i] == "None":
                         recvData[i] = 1500
 
-                recievedData = [float(i) / 100 for i in recvData]
+                recievedData = [float(i) / 10 for i in recvData]
 
                 # print(recievedData)
                 RPMS = []
