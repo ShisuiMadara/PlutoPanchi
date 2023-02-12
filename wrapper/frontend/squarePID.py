@@ -89,7 +89,7 @@ class PID:
                     for i in [0, 1, 2]:
                         newRPM, error = self._getNextVal(recievedData[i], i)
                         RPMS.append(newRPM)
-                        print(error, end=" ")
+                        print(error, end="\n\r")
                         if abs(error) > self._threshold:
                             Flag = False
                 print(f"\n\r{Flag}", end="\n\r")
@@ -109,6 +109,10 @@ class PID:
         shm.close()
 
     def _getError(self, currentValue: float, idx: int) -> float:
+        print(
+            f"{currentValue} - {self.targets[self._currentTargetIndex][idx]}",
+            end="\n\r",
+        )
         return currentValue - float(self.targets[self._currentTargetIndex][idx])
 
     def _getTime(self) -> int:
