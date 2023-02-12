@@ -6,7 +6,7 @@ def run_in_terminal(command):
 
 
 commands = [
-    "cd wrapper && cd frontend && python3 functions.py ",
+    "cd wrapper && cd frontend && python3 functions.py",
     "cd wrapper && cd Server && ./a.out",
     "cd wrapper && cd pose_estimation && python3 pose_estimation.py",
 ]
